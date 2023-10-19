@@ -1,0 +1,10 @@
+# production
+/build
+
+*.log
+
+# dependencies
+/node_modules
+
+# ide
+.idea/*

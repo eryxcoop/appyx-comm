@@ -1,0 +1,19 @@
+{
+  "name": "appyx-comm",
+  "version": "1.0.0",
+  "description": "Paquete de comunicación web",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eryxcoop/appyx-comm.git"
+  },
+  "author": "Eryx",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eryxcoop/appyx-comm/issues"
+  },
+  "homepage": "https://github.com/eryxcoop/appyx-comm#readme"
+}

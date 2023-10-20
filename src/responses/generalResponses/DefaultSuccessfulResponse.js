@@ -1,6 +1,6 @@
 import SuccessfulApiResponse from "./SuccessfulApiResponse";
 
-export class DefaultSuccessfulResponse extends SuccessfulApiResponse {
+export default class DefaultSuccessfulResponse extends SuccessfulApiResponse {
     static defaultResponse() {
         return {
             "object": {},

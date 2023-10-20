@@ -1,4 +1,4 @@
-import {DefaultSuccessfulResponse} from "../responses/generalResponses/DefaultSuccessfulResponse";
+import DefaultSuccessfulResponse from "../responses/generalResponses/DefaultSuccessfulResponse";
 import AuthenticationErrorResponse from "../responses/generalResponses/AuthenticationErrorResponse";
 import PermissionErrorResponse from "../responses/generalResponses/PermissionErrorResponse";
 import {ParametersValidationErrorResponse} from "../responses/generalResponses/ParametersValidationErrorResponse";

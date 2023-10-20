@@ -1,7 +1,6 @@
-class AuthorizationManager {
-    token() {
+
+export default class AuthorizationManager {
+    configureHeaders(headers) {
         throw new Error("You have to implement the method");
     }
 }
-
-export default AuthorizationManager;

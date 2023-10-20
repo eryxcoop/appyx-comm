@@ -6,6 +6,12 @@
 
 Communication package for javascript.
 
+## Installation
+
+```bash
+$ npm i @eryxcoop/appyx-comm
+```
+
 # Contribute
 
 In order to update npm package a new release must be created. Any new release must be named @eryxcoop/appyx-comm-{version}

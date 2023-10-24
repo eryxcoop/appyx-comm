@@ -3,11 +3,11 @@ export {default as FakeRequester} from "./src/requester/FakeRequester";
 export {default as RemoteRequester} from "./src/requester/RemoteRequester";
 
 // Endpoints
-export {default as Endpoint} from  "./src/endpoints/endpoint";
+export {default as Endpoint} from "./src/endpoints/Endpoint";
 export {default as AuthorizationManager} from "./src/authorization/AuthorizationManager";
 
 // Responses
-export {default as ApiResponse} from  "./src/responses/response";
+export {default as ApiResponse} from "./src/responses/ApiResponse";
 export {default as SuccessfulApiResponse} from  "./src/responses/generalResponses/SuccessfulApiResponse";
 export {default as ApiErrorResponse} from  "./src/responses/generalResponses/ApiErrorResponse";
 export {default as UnexpectedErrorResponse} from  "./src/responses/generalResponses/UnexpectedErrorResponse";
@@ -19,4 +19,4 @@ export {default as ServerErrorResponse} from  "./src/responses/generalResponses/
 
 
 // Client
-export {default as ApiClient} from  "./src/apiClient";
+export {default as ApiClient} from "./src/ApiClient";

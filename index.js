@@ -16,3 +16,7 @@ export {default as InvalidCredentialsResponse} from  "./src/responses/generalRes
 export {default as SimpleApiErrorResponse} from  "./src/responses/generalResponses/SimpleApiErrorResponse";
 export {default as PermissionErrorResponse} from  "./src/responses/generalResponses/PermissionErrorResponse";
 export {default as ServerErrorResponse} from  "./src/responses/generalResponses/ServerErrorResponse";
+
+
+// Client
+export {default as ApiClient} from  "./src/apiClient";

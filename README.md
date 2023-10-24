@@ -21,4 +21,4 @@ In order to update npm package a new release must be created. Any new release mu
 
 - [x] Deploy library as a package in npm
 - [ ] Create sample project to show how the package works
-- [ ] Add ApiClient
+- [x] Add ApiClient

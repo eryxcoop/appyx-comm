@@ -48,6 +48,45 @@ export default class ApiClient {
     }
 
 
+    forgotPassword(email) {
+        let values = {
+            email: email || ''
+        };
+
+        const endpoint = new ForgotPasswordEndpoint();
+        return this._callEndpoint(endpoint, values);
+    }
+
+    recoverPassword(email, password, token) {
+        let values = {
+            email: email || '',
+            password: password || '',
+            token: token || '',
+        };
+        const endpoint = new RecoverPasswordEndpoint();
+        return this._callEndpoint(endpoint, values);
+    }
+
+    signUp(email, password) {
+        let values = {
+            email: email || '',
+            password: password || '',
+        };
+
+        const endpoint = new SignUpEndpoint();
+        return this._callEndpoint(endpoint, values);
+    }
+
+    login(email, password) {
+        let values = {
+            username: email,
+            password: password
+        };
+
+        const endpoint = new LoginEndpoint();
+        return this._callEndpoint(endpoint, values);
+    }
+
     _callEndpoint(endpoint, values, errorHandler) {
         const result = this._call(endpoint, values);
         return result.then((response) => {

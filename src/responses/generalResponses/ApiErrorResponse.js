@@ -1,4 +1,4 @@
-import ApiResponse from "../response"
+import ApiResponse from "../ApiResponse"
 
 export default class ApiErrorResponse extends ApiResponse {
 

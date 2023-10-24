@@ -49,7 +49,7 @@ export default class ApiClient {
 
 
     _callEndpoint(endpoint, values, errorHandler) {
-        let result = this._call(endpoint, values);
+        const result = this._call(endpoint, values);
         return result.then((response) => {
             this._handleResponse(response, errorHandler)
             if (response.hasError()) {

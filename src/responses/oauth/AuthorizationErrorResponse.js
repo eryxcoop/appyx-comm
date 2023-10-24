@@ -1,4 +1,4 @@
-import {ApiResponse} from "../response"
+import {ApiResponse} from "../ApiResponse"
 
 export class AuthorizationErrorResponse extends ApiResponse {
     static defaultResponse() {

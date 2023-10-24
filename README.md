@@ -2,7 +2,7 @@
 ![image](https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white)
 
 
-# Appy-Comm
+# Appyx-Comm
 
 Communication package for javascript.
 
@@ -22,3 +22,4 @@ In order to update npm package a new release must be created. Any new release mu
 - [x] Deploy library as a package in npm
 - [ ] Create sample project to show how the package works
 - [x] Add ApiClient
+- [] Add tests

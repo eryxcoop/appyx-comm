@@ -1,23 +1,18 @@
-import ServerErrorResponse from "./responses/generalResponses/ServerErrorResponse";
-import UnexpectedErrorResponse from "./responses/generalResponses/UnexpectedErrorResponse";
-import AuthenticationErrorResponse from "./responses/generalResponses/AuthenticationErrorResponse";
+import ApiResponseErrorHandler from "./errors/ApiResponseErrorHandler";
 
 export default class ApiClient {
     constructor(
         requester,
-        onServerErrorDo = () => {
-        },
-        onAuthorizationErrorDo = () => {
-        },
+        apiResponseErrorHandler = undefined,
         onExceptionDo = (exception) => {
             throw exception;
         },
     ) {
         this._requester = requester;
-        this._onServerErrorDo = onServerErrorDo;
         this._onExceptionDo = onExceptionDo;
-        this._defaultHandleError = () => {};
-        this._onAuthorizationErrorDo = onAuthorizationErrorDo;
+        this._defaultHandleError = () => {
+        };
+        this._apiResponseErrorHandler = apiResponseErrorHandler || new ApiResponseErrorHandler();
         this._handleResponse = this._handleResponse.bind(this);
         this._handleException = this._handleException.bind(this);
     }
@@ -33,71 +28,30 @@ export default class ApiClient {
             } else {
                 handleError(response)
             }
-
-            return response
         }
-
-        if (response instanceof ServerErrorResponse || response instanceof UnexpectedErrorResponse) {
-            return this._onServerErrorDo(response);
-        }
-
-        if (response instanceof AuthenticationErrorResponse) {
-            return this._onAuthorizationErrorDo(response);
-        }
-        return response;
     }
 
-
-    forgotPassword(email) {
-        let values = {
-            email: email || ''
+    _handleErrorForRequest(response, endpoint, values, errorHandler = undefined) {
+        const retry = async () => {
+            return this._callEndpoint(endpoint, values);
         };
+        const request = {endpoint, values, retry};
 
-        const endpoint = new ForgotPasswordEndpoint();
-        return this._callEndpoint(endpoint, values);
+        const apiResponseErrorHandler = this._apiResponseErrorHandler.mergeWith(errorHandler);
+        return apiResponseErrorHandler.handleErrorForRequest(response, request);
     }
 
-    recoverPassword(email, password, token) {
-        let values = {
-            email: email || '',
-            password: password || '',
-            token: token || '',
-        };
-        const endpoint = new RecoverPasswordEndpoint();
-        return this._callEndpoint(endpoint, values);
-    }
 
-    signUp(email, password) {
-        let values = {
-            email: email || '',
-            password: password || '',
-        };
-
-        const endpoint = new SignUpEndpoint();
-        return this._callEndpoint(endpoint, values);
-    }
-
-    login(email, password) {
-        let values = {
-            username: email,
-            password: password
-        };
-
-        const endpoint = new LoginEndpoint();
-        return this._callEndpoint(endpoint, values);
-    }
-
-    _callEndpoint(endpoint, values, errorHandler) {
-        const result = this._call(endpoint, values);
-        return result.then((response) => {
-            this._handleResponse(response, errorHandler)
-            if (response.hasError()) {
-                return Promise.reject(response.message());
+    async _callEndpoint(endpoint, values, errorHandler) {
+        try {
+            const response = await this._call(endpoint, values);
+            if (!response.hasError()) {
+                return response;
             }
-            return result
-        }).catch((exception) => {
+            return this._handleErrorForRequest(response, endpoint, values, errorHandler);
+        } catch (exception) {
             return this._handleException(exception);
-        });
+        }
     }
 
     _call(endpoint, values) {

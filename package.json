@@ -3,8 +3,9 @@
   "version": "1.0.2",
   "description": "Paquete de comunicación web",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/eryxcoop/appyx-comm/issues"
   },
-  "homepage": "https://github.com/eryxcoop/appyx-comm#readme"
+  "homepage": "https://github.com/eryxcoop/appyx-comm#readme",
+  "devDependencies": {
+    "vite": "^5.0.11",
+    "vitest": "^1.2.0"
+  }
 }

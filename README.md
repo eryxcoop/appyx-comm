@@ -4,6 +4,8 @@
 
 # Appyx-Comm
 
+![test workflow](https://github.com/github/docs/actions/workflows/test.yml/badge.svg)
+
 Communication package for javascript.
 
 ## Installation

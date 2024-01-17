@@ -1,4 +1,4 @@
-![test workflow](https://github.com/github/docs/actions/workflows/test.yml/badge.svg)
+![test workflow](https://github.com/github/docs/actions/workflows/test.yml/badge.svg) [![npm version](https://badge.fury.io/js/@eryxcoop%2Fappyx-comm.svg)](https://badge.fury.io/js/@eryxcoop%2Fappyx-comm)
 
 # Appyx-Comm
 
@@ -20,6 +20,6 @@ In order to update npm package a new release must be created. Any new release mu
 # Work to be done
 
 - [x] Deploy library as a package in npm
-- [ ] Create sample project to show how the package works
+- [ ] Complete documentation
 - [x] Add ApiClient
 - [x] Add tests

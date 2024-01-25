@@ -1,7 +1,7 @@
 import Endpoint from "../src/endpoints/Endpoint";
 import {SuccessfulApiResponse} from "../index";
 import ApiClient from "../src/ApiClient";
-import ApiResponseErrorHandler from "../src/errors/ApiResponseErrorHandler";
+import ApiResponseHandler from "../src/errors/ApiResponseHandler.js";
 import AuthenticationErrorResponse from "../src/responses/generalResponses/AuthenticationErrorResponse";
 
 import {expect, test} from 'vitest'
@@ -28,9 +28,9 @@ class ExampleEndpoint extends Endpoint {
 
 
 class ExampleApiClient extends ApiClient {
-    exampleEndpoint(customErrorHandler) {
+    exampleEndpoint(customResponseHandler) {
         const endpoint = new ExampleEndpoint();
-        return this._callEndpoint(endpoint, {}, customErrorHandler);
+        return this._callEndpoint(endpoint, {}, customResponseHandler);
     }
 }
 
@@ -51,7 +51,7 @@ test('Test general error handling can be set for api client', async () => {
         ));
 
     // And a call to an endpoint that needs authentication
-    const generalErrorHandler = new ApiResponseErrorHandler().handlesError(
+    const generalErrorHandler = new ApiResponseHandler().handles(
         AuthenticationErrorResponse,
         (request) => {
             return 'general error handler'
@@ -60,7 +60,7 @@ test('Test general error handling can be set for api client', async () => {
     const client = new ExampleApiClient(requester, generalErrorHandler);
     const response = await client.exampleEndpoint();
 
-    // Then the response is handled by the general error handler
+    // Then the response is handled by the general response handler
     expect(response).toBe('general error handler')
 });
 
@@ -81,7 +81,7 @@ test('Test general error can be overridden for call in api client', async () => 
         ));
 
     // And a call to an endpoint that needs authentication
-    const generalErrorHandler = new ApiResponseErrorHandler().handlesError(
+    const generalErrorHandler = new ApiResponseHandler().handles(
         AuthenticationErrorResponse,
         (request) => {
             return 'general error handler'
@@ -90,7 +90,7 @@ test('Test general error can be overridden for call in api client', async () => 
     const client = new ExampleApiClient(requester, generalErrorHandler);
 
     //  but has a custom error handler for it
-    const customErrorHandler = new ApiResponseErrorHandler().handlesError(
+    const customErrorHandler = new ApiResponseHandler().handles(
         AuthenticationErrorResponse,
         (request) => {
             return 'custom error handler'
@@ -98,6 +98,32 @@ test('Test general error can be overridden for call in api client', async () => 
     );
     const response = await client.exampleEndpoint(customErrorHandler);
 
-    // Then the response is handled by the custom error handler
+    // Then the response is handled by the custom response handler
     expect(response).toBe('custom error handler')
+});
+
+test('Test success handling', async () => {
+    // Given a client
+    const requester = new DummyRequester();
+    requester.setExpectedResponses(
+        new SuccessfulApiResponse(
+            {
+                "object": {'message': "Hi!"},
+                "errors": []
+            }
+        ));
+
+    const client = new ExampleApiClient(requester);
+
+    //  but has a handler for successful responses
+    const customResponseHandler = new ApiResponseHandler().handles(
+        SuccessfulApiResponse,
+        (request) => {
+            return 'alles gut!'
+        },
+    );
+    const response = await client.exampleEndpoint(customResponseHandler);
+
+    // Then the response is handled by the custom response handler
+    expect(response).toBe('alles gut!')
 });

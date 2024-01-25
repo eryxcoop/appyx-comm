@@ -11,7 +11,7 @@ appyx-comm
 Appy-Comm
 -----
 
-Un texto profundo y filosófico sobre la librería.
+Appy-Comm is a library to help you to communicate with Appyx, but also if your are not using it! Now you request are simpler and responses can be handled easily.
 
 
 .. toctree::

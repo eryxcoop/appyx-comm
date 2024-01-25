@@ -1,9 +1,9 @@
-import ApiResponseErrorHandler from "./errors/ApiResponseErrorHandler";
+import ApiResponseHandler from "./errors/ApiResponseHandler.js";
 
 export default class ApiClient {
     constructor(
         requester,
-        apiResponseErrorHandler = undefined,
+        apiResponseHandler = undefined,
         onExceptionDo = (exception) => {
             throw exception;
         },
@@ -12,7 +12,7 @@ export default class ApiClient {
         this._onExceptionDo = onExceptionDo;
         this._defaultHandleError = () => {
         };
-        this._apiResponseErrorHandler = apiResponseErrorHandler || new ApiResponseErrorHandler();
+        this._apiResponseHandler = apiResponseHandler || new ApiResponseHandler();
         this._handleResponse = this._handleResponse.bind(this);
         this._handleException = this._handleException.bind(this);
     }
@@ -31,24 +31,21 @@ export default class ApiClient {
         }
     }
 
-    _handleErrorForRequest(response, endpoint, values, errorHandler = undefined) {
+    _handleResponseForRequest(response, endpoint, values, errorHandler = undefined) {
         const retry = async () => {
             return this._callEndpoint(endpoint, values);
         };
         const request = {endpoint, values, retry};
 
-        const apiResponseErrorHandler = this._apiResponseErrorHandler.mergeWith(errorHandler);
-        return apiResponseErrorHandler.handleErrorForRequest(response, request);
+        const apiResponseErrorHandler = this._apiResponseHandler.mergeWith(errorHandler);
+        return apiResponseErrorHandler.handleResponseForRequest(response, request);
     }
 
 
-    async _callEndpoint(endpoint, values, errorHandler) {
+    async _callEndpoint(endpoint, values, customResponseHandler) {
         try {
             const response = await this._call(endpoint, values);
-            if (!response.hasError()) {
-                return response;
-            }
-            return this._handleErrorForRequest(response, endpoint, values, errorHandler);
+            return this._handleResponseForRequest(response, endpoint, values, customResponseHandler);
         } catch (exception) {
             return this._handleException(exception);
         }

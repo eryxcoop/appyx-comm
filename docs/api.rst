@@ -2,12 +2,12 @@
 ``Requesters``
 -------------
 
-Information about the requester.
+Information about the requesters.
 
 ``Endpoints``
 -------------
 
-Information about the requester.
+Information about endpoints.
 
 
 ``Responses``
@@ -30,7 +30,7 @@ every expected response should be handled. For example, you can indicate that ev
 .. code-block:: javascript
   :linenos:
 
-    const customResponseHandler = new ApiResponseHandler().handles(
+    const customResponseHandler = ApiResponseHandler.for(
         SuccessfulApiResponse,
         (request) => {
             doSomething();
@@ -47,7 +47,7 @@ you have to indicate all your general responses handlers in the client construct
 .. code-block:: javascript
   :linenos:
 
-    const generalResponsesHandler = new ApiResponseHandler().handles(
+    const generalResponsesHandler = ApiResponseHandler.for(
         AuthenticationErrorResponse,
         (request) => {
             return authenticateUserAgain();
@@ -55,6 +55,27 @@ you have to indicate all your general responses handlers in the client construct
     );
     const client = new ExampleApiClient(requester, generalResponsesHandler);
 
+
+In order to have multiple  responses to consider, you can clarify them all with the ``handler`` method. Remember that ``ApiResponseHandler`` is an unmutable object, so everytime a
+response is add it will return a new ``ApiResponseHandler`` object. For example:
+
+.. code-block:: javascript
+  :linenos:
+
+    let responsesHandler = new ApiResponseHandler();
+    responsesHandler = responseHandler.handles(
+        SuccessfulApiResponse,
+        (request) => {
+            return doSomething();
+        },
+    );
+    responsesHandler = responseHandler.handles(
+        AuthenticationErrorResponse,
+        (request) => {
+            return authenticateUserAgain();
+        },
+    );
+    const client = new ExampleApiClient(requester, responsesHandler);
 
 Now you may be wondering, what happens if I want to handle a specific response in a different way? Well, you can already do that! every time you indicate
 the way responses should be handled, you are actually overriding the default response handler. So, if you want to handle a specific response in a different way,

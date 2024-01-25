@@ -51,9 +51,9 @@ test('Test general error handling can be set for api client', async () => {
         ));
 
     // And a call to an endpoint that needs authentication
-    const generalErrorHandler = new ApiResponseHandler().handles(
+    const generalErrorHandler = ApiResponseHandler.for(
         AuthenticationErrorResponse,
-        (request) => {
+        () => {
             return 'general error handler'
         },
     );
@@ -81,7 +81,7 @@ test('Test general error can be overridden for call in api client', async () => 
         ));
 
     // And a call to an endpoint that needs authentication
-    const generalErrorHandler = new ApiResponseHandler().handles(
+    const generalErrorHandler = ApiResponseHandler.for(
         AuthenticationErrorResponse,
         (request) => {
             return 'general error handler'
@@ -90,7 +90,7 @@ test('Test general error can be overridden for call in api client', async () => 
     const client = new ExampleApiClient(requester, generalErrorHandler);
 
     //  but has a custom error handler for it
-    const customErrorHandler = new ApiResponseHandler().handles(
+    const customErrorHandler = ApiResponseHandler.for(
         AuthenticationErrorResponse,
         (request) => {
             return 'custom error handler'
@@ -116,10 +116,43 @@ test('Test success handling', async () => {
     const client = new ExampleApiClient(requester);
 
     //  but has a handler for successful responses
-    const customResponseHandler = new ApiResponseHandler().handles(
+    const customResponseHandler = ApiResponseHandler.for(
         SuccessfulApiResponse,
         (request) => {
             return 'alles gut!'
+        },
+    );
+    const response = await client.exampleEndpoint(customResponseHandler);
+
+    // Then the response is handled by the custom response handler
+    expect(response).toBe('alles gut!')
+});
+
+test('Test multiple responses can be set but only received is handled', async () => {
+    // Given a client
+    const requester = new DummyRequester();
+    requester.setExpectedResponses(
+        new SuccessfulApiResponse(
+            {
+                "object": {'message': "Hi!"},
+                "errors": []
+            }
+        ));
+
+    const client = new ExampleApiClient(requester);
+
+    //  but has a handler for successful responses
+    let customResponseHandler = new ApiResponseHandler();
+    customResponseHandler = customResponseHandler.handles(
+        SuccessfulApiResponse,
+        (request) => {
+            return 'alles gut!'
+        },
+    );
+    customResponseHandler = customResponseHandler.handles(
+        AuthenticationErrorResponse,
+        (request) => {
+            return 'alles nicht gut!'
         },
     );
     const response = await client.exampleEndpoint(customResponseHandler);

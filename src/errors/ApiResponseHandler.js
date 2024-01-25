@@ -4,6 +4,14 @@ export default class ApiResponseHandler {
     constructor(responseMapper) {
         this._responseMapper = responseMapper;
     }
+
+    static for(response, handler) {
+        const responseMapper = {
+            [response]: handler,
+        };
+        return new this(responseMapper);
+    }
+
     handles(response, handler) {
         const newResponseHandler = new ApiResponseHandler({
             [response]: handler,

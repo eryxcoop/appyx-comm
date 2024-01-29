@@ -1,14 +1,46 @@
+``ApiClient``
+-------------
+
+wip
+
 
 ``Requesters``
 -------------
 
-Information about the requesters.
+wip
 
 ``Endpoints``
 -------------
 
-Information about endpoints.
+When you create and ``Endpoint`` you are defining where the request should be made, what type of request is it and what kind of responses should you expect.
+Your ApiClient will be able to execute the endpoint you created.
+For example, you can create an endpoint like this:
 
+.. code-block:: javascript
+  :linenos:
+
+    class ExampleEndpoint extends Endpoint{
+      url() {
+        return "example_url";
+      }
+
+      ownResponses() {
+        return [GetExampleResponse];
+      }
+
+      method() {
+        return this.constructor.getMethod();
+      }
+
+      needsAuthorization() {
+        return true;
+      }
+    }
+
+
+    // Now you can use it like this
+    const endpointToExample = new ExampleEndpoint();
+    const response = await client._callEndpoint(endpointToExample);
 
 ``Responses``
 -------------

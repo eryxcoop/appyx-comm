@@ -12,14 +12,7 @@ Communication package for javascript.
 $ npm i @eryxcoop/appyx-comm
 ```
 
-# Contribute
+## Contribute
 
 In order to update npm package a new release must be created. Any new release must be named
 @eryxcoop/appyx-comm-{version}
-
-# Work to be done
-
-- [x] Deploy library as a package in npm
-- [ ] Complete documentation
-- [x] Add ApiClient
-- [x] Add tests

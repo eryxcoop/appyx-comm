@@ -1,24 +1,16 @@
-appyx-comm
-=========
-
-.. image:: https://github.com/github/docs/actions/workflows/test.yml/badge.svg
-   :alt: GitHub Actions - CI
-
-
-.. image:: https://badge.fury.io/js/@eryxcoop%2Fappyx-comm.svg
-    :target: https://badge.fury.io/js/@eryxcoop%2Fappyx-comm
+.. mdinclude:: ../README.md
 
 Appy-Comm
 -----
 
-Appy-Comm is a library to help you to communicate with Appyx, but also if your are not using it! Now you request are simpler and responses can be handled easily.
+Appy-Comm is a library to help you to communicate with Appyx, but also if your are not using it! Now your requests are simpler and responses can be handled easily.
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Usage
+    :hidden:
+    :maxdepth: 2
 
-   api
+    guide
 
 
 .. toctree::

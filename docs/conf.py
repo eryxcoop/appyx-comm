@@ -15,7 +15,9 @@ author = 'Eryx'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-"sphinx_rtd_theme",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx_mdinclude",
 ]
 
 
@@ -26,7 +28,23 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # html_theme = "sphinx_rtd_theme"
 
 # -- Options for HTML output -------------------------------------------------
+
+# -- Options for HTML output -------------------------------------------------
+
+# The theme to use for HTML and HTML Help pages.  See the documentation for
+# a list of builtin themes.
+#
+html_theme = "alabaster"
+html_theme_options = {
+    "description": "...",
+    "fixed_sidebar": True,
+    "badge_branch": "main",
+    "github_button": False,
+    "github_user": "eryxcoop",
+    "github_repo": "appyx-comm",
+    "show_powered_by": False,
+    "sidebar_collapse": False,
+}
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
 html_static_path = ['_static']

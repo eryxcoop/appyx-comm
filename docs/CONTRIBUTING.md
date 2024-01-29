@@ -1,6 +1,6 @@
 # Contributing
 
-To help speed up the review process please ensure the following:
+In order to contribute please ensure the following:
 
 * All tests are passing locally with ``npm test``.
 * If adding a new feature you also add documentation.
@@ -11,7 +11,7 @@ appyx-comm requires [node](https://nodejs.org/en) to be installed on your system
 
 ## Testing
 
-Test are created using vite. To run them you must first install the dependencies and then run:
+Test are created using [vitest](https://vitest.dev/). To run them you must first install the dependencies and then run:
 
 ```shell-session
 $ npm install
@@ -20,7 +20,7 @@ $ npm test
 
 ## Documentation
 
-appyx-comm uses [Sphinx](https://www.sphinx-doc.org/en/master/) for building documentation, and all documentation is
+appyx-comm uses [sphinx](https://www.sphinx-doc.org/en/master/) for building documentation, and all documentation is
 stored in the `docs/` directory at the root of the repository.
 
 To make changes to the documentation you must first initialize the workspace with poetry (inside docs folder):

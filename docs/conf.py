@@ -36,7 +36,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 #
 html_theme = "alabaster"
 html_theme_options = {
-    "description": "...",
+    "description": "A small communication library",
     "fixed_sidebar": True,
     "badge_branch": "main",
     "github_button": False,
@@ -45,6 +45,14 @@ html_theme_options = {
     "show_powered_by": False,
     "sidebar_collapse": False,
 }
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+
+html_sidebars = {
+    "**": [
+        "about.html",
+        "navigation.html",
+        "searchbox.html",
+        "eryx.html",
+    ],
+}
 
 html_static_path = ['_static']

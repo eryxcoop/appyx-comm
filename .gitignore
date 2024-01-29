@@ -8,3 +8,4 @@
 
 # ide
 .idea/*
+docs/_build/*

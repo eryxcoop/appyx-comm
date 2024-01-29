@@ -1,13 +1,25 @@
-``ApiClient``
--------------
-
-wip
-
-
 ``Requesters``
 -------------
 
-wip
+``RemoteRequester`` is class that represents a requester. It is used to make requests to the api. You can create your own requester by extending this class.
+
+.. code-block:: javascript
+  :linenos:
+
+  // We create remote requester
+  const authorizationManager = new AppAuthorizationManager(this);
+  const remoteRequester = new RemoteRequester(remoteApiUrl, authorizationManager);
+
+
+``FakeRequester`` can be used if you are testing your application without having a server running on the other side. Fake will
+respond the ``defaultResponse`` you indicate in your expected response.
+
+.. code-block:: javascript
+  :linenos:
+
+  // We create fake requester
+  const remoteRequester = new FakeRequester();
+
 
 ``Endpoints``
 -------------
@@ -48,8 +60,6 @@ For example, you can create an endpoint like this:
 Every time you make a call to the api, you will (usually) received a json response. Response is here for you to represent that response. That way you can easily tell
 you endpoint what kind of responses it should expect. You can use responses such as  ``SuccessfulApiResponse`` already given by the library or you can create your own to
 make use of its full potential and ask your response for specific information
-
-
 
 
 ``Response Handler``
@@ -112,3 +122,32 @@ response is add it will return a new ``ApiResponseHandler`` object. For example:
 Now you may be wondering, what happens if I want to handle a specific response in a different way? Well, you can already do that! every time you indicate
 the way responses should be handled, you are actually overriding the default response handler. So, if you want to handle a specific response in a different way,
 just override the default response handler again.
+
+``ApiClient``
+-------------
+
+Finally, you can create your own ApiClient by extending the ``ApiClient`` class. This class is the one that will be used to make the requests to the api.
+
+.. code-block:: javascript
+  :linenos:
+
+    class MyApiClient extends ApiClient{
+
+      registerNewUser(email, password, name) {
+        const endpoint = new RegisterUserEndpoint();
+        return this._callEndpoint(endpoint, { email, password, name });
+      }
+    }
+
+    // We create remote requester
+    const authorizationManager = new AppAuthorizationManager(this);
+    const remoteRequester = new RemoteRequester(remoteApiUrl, authorizationManager);
+
+    // We create responses handler
+    const apiResponseHandler = new ApiResponseHandler(this);
+
+    // We create the client
+    const endpointToExample = new MyApiClient(remoteRequester, responsesHandler);
+
+    // We use it to register a new user
+    const response = await client.registerNewUser(endpointToExample);

@@ -57,9 +57,34 @@ For example, you can create an endpoint like this:
 ``Responses``
 -------------
 
-Every time you make a call to the api, you will (usually) received a json response. Response is here for you to represent that response. That way you can easily tell
-you endpoint what kind of responses it should expect. You can use responses such as  ``SuccessfulApiResponse`` already given by the library or you can create your own to
+Every time you make a call to the api, you will (usually) receive a response. Response is here for you to represent that response.
+That way you can easily tell your endpoint what kind of responses it should expect.
+You can use already created responses in the library such as  ``SuccessfulApiResponse`` or you can create your own to
 make use of its full potential and ask your response for specific information
+
+Here is an example of a response:}
+
+.. code-block:: javascript
+  :linenos:
+
+    // We extend from successful api response because we are representing the successful response of our call.
+    class ExampleSuccessfulResponse extends SuccessfulApiResponse{
+      // We leave an example of the type of response you expect
+      static defaultResponse() {
+        return {
+          object: {
+            example: {
+              value: 1,
+            },
+          },
+          errors: [],
+        };
+      }
+
+      get exampleValue() {
+        return this.content().example.value;
+      }
+    }
 
 
 ``Response Handler``

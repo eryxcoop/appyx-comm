@@ -42,19 +42,7 @@ class ExampleApiClient extends ApiClient {
 
 test('Test general error handling can be set for api client', async () => {
     // Given a client that is not authenticated
-    const requester = new DummyRequester();
-    requester.setExpectedResponses(
-        new AuthenticationErrorResponse(
-            {
-                "object": null,
-                "errors": [
-                    {
-                        "code": "authentication_error",
-                        "text": ""
-                    }
-                ]
-            }
-        ));
+    const requester = dummyRequesterExpectingAuthenticationErrorResponse();
 
     // And a call to an endpoint that needs authentication
     const generalErrorHandler = ApiResponseHandler.for(
@@ -72,19 +60,7 @@ test('Test general error handling can be set for api client', async () => {
 
 test('Test general error can be overridden for call in api client', async () => {
     // Given a client that is not authenticated
-    const requester = new DummyRequester();
-    requester.setExpectedResponses(
-        new AuthenticationErrorResponse(
-            {
-                "object": null,
-                "errors": [
-                    {
-                        "code": "authentication_error",
-                        "text": ""
-                    }
-                ]
-            }
-        ));
+    const requester = dummyRequesterExpectingAuthenticationErrorResponse();
 
     // And a call to an endpoint that needs authentication
     const generalErrorHandler = ApiResponseHandler.for(
@@ -110,14 +86,7 @@ test('Test general error can be overridden for call in api client', async () => 
 
 test('Test success handling', async () => {
     // Given a client
-    const requester = new DummyRequester();
-    requester.setExpectedResponses(
-        new SuccessfulApiResponse(
-            {
-                "object": {'message': "Hi!"},
-                "errors": []
-            }
-        ));
+    const requester = dummyRequesterExpectingSuccessfulResponse();
 
     const client = new ExampleApiClient(requester);
 
@@ -137,14 +106,7 @@ test('Test success handling', async () => {
 
 test('Test you can clarify to response handler the way to handle any success case', async () => {
     // Given a client
-    const requester = new DummyRequester();
-    requester.setExpectedResponses(
-        new SuccessfulApiResponse(
-            {
-                "object": {'message': "Hi!"},
-                "errors": []
-            }
-        ));
+    const requester = dummyRequesterExpectingSuccessfulResponse();
 
     const client = new ExampleApiClient(requester);
 
@@ -153,7 +115,8 @@ test('Test you can clarify to response handler the way to handle any success cas
         (request) => {
             return 'alles gut!'
         },
-    )
+    ).handlesError(() => console.log('Error'));
+
     const response = await client.exampleEndpoint(customResponseHandler);
 
     // Then the response is handled by the custom response handler
@@ -190,14 +153,7 @@ test('Test you can customize your success response', async () => {
 
 test('Test you can clarify to response handler the way to handle any error raised', async () => {
     // Given a client
-    const requester = new DummyRequester();
-    requester.setExpectedResponses(
-        new AuthenticationErrorResponse(
-            {
-                "object": null,
-                "errors": ['errors']
-            }
-        ));
+    const requester = dummyRequesterExpectingAuthenticationErrorResponse();
 
     const client = new ExampleApiClient(requester);
 
@@ -215,14 +171,7 @@ test('Test you can clarify to response handler the way to handle any error raise
 
 test('Test you cant merge two response handlers that clarify handles error', async () => {
     // Given a client
-    const requester = new DummyRequester();
-    requester.setExpectedResponses(
-        new AuthenticationErrorResponse(
-            {
-                "object": null,
-                "errors": ['errors']
-            }
-        ));
+    const requester = dummyRequesterExpectingAuthenticationErrorResponse();
 
     const client = new ExampleApiClient(requester);
 
@@ -247,14 +196,7 @@ test('Test you cant merge two response handlers that clarify handles error', asy
 
 test('Test multiple responses can be set but only received is handled', async () => {
     // Given a client
-    const requester = new DummyRequester();
-    requester.setExpectedResponses(
-        new SuccessfulApiResponse(
-            {
-                "object": {'message': "Hi!"},
-                "errors": []
-            }
-        ));
+    const requester = dummyRequesterExpectingSuccessfulResponse();
 
     const client = new ExampleApiClient(requester);
 
@@ -277,3 +219,28 @@ test('Test multiple responses can be set but only received is handled', async ()
     // Then the response is handled by the custom response handler
     expect(response).toBe('alles gut!')
 });
+
+
+function dummyRequesterExpectingSuccessfulResponse() {
+    const requester = new DummyRequester();
+    requester.setExpectedResponses(
+        new SuccessfulApiResponse(
+            {
+                "object": {'message': "Hi!"},
+                "errors": []
+            }
+        ));
+    return requester;
+}
+
+function dummyRequesterExpectingAuthenticationErrorResponse() {
+    const requester = new DummyRequester();
+    requester.setExpectedResponses(
+        new AuthenticationErrorResponse(
+            {
+                "object": null,
+                "errors": ['errors']
+            }
+        ));
+    return requester;
+}

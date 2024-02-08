@@ -198,14 +198,13 @@ test('Test multiple responses can be set but only received is handled', async ()
     const client = new ExampleApiClient(requester);
 
     //  but has a handler for successful responses
-    let customResponseHandler = new ApiResponseHandler({});
-    customResponseHandler = customResponseHandler.handles(
+    let customResponseHandler = new ApiResponseHandler({}
+    ).handles(
         SuccessfulApiResponse,
         (request) => {
             return 'alles gut!'
         },
-    );
-    customResponseHandler = customResponseHandler.handles(
+    ).handles(
         AuthenticationErrorResponse,
         (request) => {
             return 'alles nicht gut!'

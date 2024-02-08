@@ -15,8 +15,9 @@ export default class ApiResponseHandler {
     }
 
     handles(response, handler) {
-        let responseMapper = {}
-        responseMapper[response] = handler;
+        const responseMapper = {
+            [response]: handler,
+        };
         const newResponseHandler = new ApiResponseHandler({responseMapper});
         return this.mergeWith(newResponseHandler);
     }

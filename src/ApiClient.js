@@ -12,7 +12,7 @@ export default class ApiClient {
         this._onExceptionDo = onExceptionDo;
         this._defaultHandleError = () => {
         };
-        this._apiResponseHandler = apiResponseHandler || new ApiResponseHandler();
+        this._apiResponseHandler = apiResponseHandler || new ApiResponseHandler({});
         this._handleResponse = this._handleResponse.bind(this);
         this._handleException = this._handleException.bind(this);
     }
@@ -31,14 +31,14 @@ export default class ApiClient {
         }
     }
 
-    _handleResponseForRequest(response, endpoint, values, errorHandler = undefined) {
+    _handleResponseForRequest(response, endpoint, values, responseHandler = undefined) {
         const retry = async () => {
             return this._callEndpoint(endpoint, values);
         };
         const request = {endpoint, values, retry};
 
-        const apiResponseErrorHandler = this._apiResponseHandler.mergeWith(errorHandler);
-        return apiResponseErrorHandler.handleResponseForRequest(response, request);
+        const apiResponseHandler = this._apiResponseHandler.mergeWith(responseHandler);
+        return apiResponseHandler.handleResponseForRequest(response, request);
     }
 
 

@@ -1,10 +1,10 @@
-import DefaultSuccessfulResponse from "../responses/generalResponses/DefaultSuccessfulResponse";
 import AuthenticationErrorResponse from "../responses/generalResponses/AuthenticationErrorResponse";
 import PermissionErrorResponse from "../responses/generalResponses/PermissionErrorResponse";
 import {ParametersValidationErrorResponse} from "../responses/generalResponses/ParametersValidationErrorResponse";
 import {ParameterValidationErrorResponse} from "../responses/generalResponses/ParameterValidationErrorResponse";
 import {SimpleErrorResponse} from "../responses/generalResponses/SimpleErrorResponse";
 import UnexpectedErrorResponse from "../responses/generalResponses/UnexpectedErrorResponse";
+import SuccessfulApiResponse from "../responses/generalResponses/SuccessfulApiResponse.js";
 
 
 export default class Endpoint {
@@ -23,7 +23,7 @@ export default class Endpoint {
 
     generalResponses() {
         return [
-            DefaultSuccessfulResponse,
+            SuccessfulApiResponse,
             AuthenticationErrorResponse,
             PermissionErrorResponse,
             SimpleErrorResponse,

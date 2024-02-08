@@ -4,6 +4,7 @@ import {ParametersValidationErrorResponse} from "../responses/generalResponses/P
 import {ParameterValidationErrorResponse} from "../responses/generalResponses/ParameterValidationErrorResponse";
 import {SimpleErrorResponse} from "../responses/generalResponses/SimpleErrorResponse";
 import UnexpectedErrorResponse from "../responses/generalResponses/UnexpectedErrorResponse";
+import SuccessfulApiResponse from "../responses/generalResponses/SuccessfulApiResponse.js";
 
 
 export default class Endpoint {
@@ -22,6 +23,7 @@ export default class Endpoint {
 
     generalResponses() {
         return [
+            SuccessfulApiResponse,
             AuthenticationErrorResponse,
             PermissionErrorResponse,
             SimpleErrorResponse,

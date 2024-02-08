@@ -110,12 +110,11 @@ test('Test you can clarify to response handler the way to handle any success cas
 
     const client = new ExampleApiClient(requester);
 
-    //  but has a handler for successful responses
-    let customResponseHandler = new ApiResponseHandler({}).handlesSuccess(
-        (request) => {
+    const customResponseHandler = new ApiResponseHandler({}).handlesSuccess(
+        (response, request) => {
             return 'alles gut!'
         },
-    ).handlesError(() => console.log('Error'));
+    )
 
     const response = await client.exampleEndpoint(customResponseHandler);
 
@@ -130,18 +129,16 @@ test('Test you can customize your success response', async () => {
     requester.setExpectedResponses(
         new TestSuccessfulApiResponse(
             {
-                "status": 'ok',
+                errors: [],
+                object: 'ok',
             }
         ));
 
     const client = new ExampleApiClient(requester);
 
     //  but has a handler for successful responses
-    let customResponseHandler = new ApiResponseHandler({
-        successfulResponse: TestSuccessfulApiResponse,
-    })
-    customResponseHandler = customResponseHandler.handlesSuccess(
-        (request) => {
+    const customResponseHandler = new ApiResponseHandler({}).handlesSuccess(
+        (response, request) => {
             return 'alles gut!'
         },
     )

@@ -1,11 +1,10 @@
 import {ApiError} from "./ApiError";
-import SuccessfulApiResponse from "../responses/generalResponses/SuccessfulApiResponse.js";
 
 export default class ApiResponseHandler {
-    constructor({responseMapper=undefined, successfulResponse=undefined, handlesError=undefined}) {
+    constructor({responseMapper = undefined, handlesSuccess = undefined, handlesError = undefined}) {
         this._responseMapper = responseMapper || {};
         this._handlesError = handlesError;
-        this._successfulResponse = successfulResponse || this._defaultSuccessfulResponse();
+        this._handlesSuccess = handlesSuccess;
     }
 
     static for(response, handler) {
@@ -23,13 +22,17 @@ export default class ApiResponseHandler {
     }
 
     handlesSuccess(handler) {
-        return this.handles(this._successfulResponse, handler);
+        return new ApiResponseHandler({
+            responseMapper: this._responseMapper,
+            handlesSuccess: handler,
+            handlesError: this._handlesError
+        });
     }
 
     handlesError(handler) {
         return new ApiResponseHandler({
             responseMapper: this._responseMapper,
-            successfulResponse: this._successfulResponse,
+            handlesSuccess: this._handlesSuccess,
             handlesError: handler
         });
     }
@@ -48,28 +51,27 @@ export default class ApiResponseHandler {
             ...anotherResponseMapper,
         };
         const newHandlesError = anotherErrorHandler._handlesError || this._handlesError;
-        const successfulResponse = anotherErrorHandler._successfulResponse || this._successfulResponse;
+        const handlesSuccess = anotherErrorHandler._handlesSuccess || this._handlesSuccess;
         return new ApiResponseHandler(
             {
                 responseMapper: newResponseMapper,
-                successfulResponse: successfulResponse,
+                handlesSuccess: handlesSuccess,
                 handlesError: newHandlesError
             });
     }
 
     async handleResponseForRequest(response, request) {
+        if (!response.hasError() && this._handlesSuccess) {
+            return this._handlesSuccess(response, request);
+        }
 
         const handler = this._responseMapper[response.constructor];
         if (handler) {
-            return await handler(request);
+            return await handler(response, request);
         }
         if (this._handlesError) {
-            return this._handlesError(response);
+            return this._handlesError(response, request);
         }
-        throw new ApiError(response);
-    }
-
-    _defaultSuccessfulResponse() {
-        return SuccessfulApiResponse;
+        throw new ApiError();
     }
 }

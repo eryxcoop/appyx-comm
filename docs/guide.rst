@@ -90,16 +90,19 @@ Here is an example of a response:}
 ``Response Handler``
 -------------
 
+Basic use
+============================
+
 Response handlers are used to handle responses received from api requests. Every time you make a call you can indicate the way
 every expected response should be handled. For example, you can indicate that every successful response should be handled by running a function.
-
+Note that ``ResponseHandler`` is an immutable object, so every time you indicate the way responses should be handled, you are actually overriding the default response handler.
 
 .. code-block:: javascript
   :linenos:
 
     const customResponseHandler = ApiResponseHandler.for(
         SuccessfulApiResponse,
-        (request) => {
+        (response, request) => {
             doSomething();
         },
     );
@@ -116,12 +119,15 @@ you have to indicate all your general responses handlers in the client construct
 
     const generalResponsesHandler = ApiResponseHandler.for(
         AuthenticationErrorResponse,
-        (request) => {
+        (response, request) => {
             return authenticateUserAgain();
         },
     );
     const client = new ExampleApiClient(requester, generalResponsesHandler);
 
+
+Multiple response handler
+============================
 
 In order to have multiple  responses to consider, you can clarify them all with the ``handler`` method. Remember that ``ApiResponseHandler`` is an unmutable object, so everytime a
 response is add it will return a new ``ApiResponseHandler`` object. For example:
@@ -132,13 +138,13 @@ response is add it will return a new ``ApiResponseHandler`` object. For example:
     let responsesHandler = new ApiResponseHandler();
     responsesHandler = responseHandler.handles(
         SuccessfulApiResponse,
-        (request) => {
+        (response, request) => {
             return doSomething();
         },
     );
     responsesHandler = responseHandler.handles(
         AuthenticationErrorResponse,
-        (request) => {
+        (response, request) => {
             return authenticateUserAgain();
         },
     );
@@ -147,6 +153,26 @@ response is add it will return a new ``ApiResponseHandler`` object. For example:
 Now you may be wondering, what happens if I want to handle a specific response in a different way? Well, you can already do that! every time you indicate
 the way responses should be handled, you are actually overriding the default response handler. So, if you want to handle a specific response in a different way,
 just override the default response handler again.
+
+Successful and error responses
+============================
+
+Sometimes you may want to have only two different cases to handle, successful responses and error responses. You can do that by:
+
+.. code-block:: javascript
+  :linenos:
+
+    let responsesHandler = new ApiResponseHandler();
+    responsesHandler = responseHandler
+                        .handlesSuccess((response, request) => {
+                            return doSomething();
+                        },
+                        ).handlesError((response, request) => {
+                                return authenticateUserAgain();
+                            },
+                        );
+    const client = new ExampleApiClient(requester, responsesHandler);
+
 
 ``ApiClient``
 -------------

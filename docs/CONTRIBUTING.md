@@ -9,13 +9,27 @@ In order to contribute please ensure the following:
 
 appyx-comm requires [node](https://nodejs.org/en) to be installed on your system.
 
-## Testing
+## Running tests
 
 Test are created using [vitest](https://vitest.dev/). To run them you must first install the dependencies and then run:
 
 ```bash
 $ npm install
 $ npm test
+```
+
+## Testing package locally
+
+To test the package locally you can use the following command:
+
+```bash
+$ npm link
+```
+
+You can also test a branch of the package by using the following command (replace `branch-name` with the name of the branch):
+
+```bash
+$ npm install "https://github.com/eryxcoop/appyx-comm.git#branch-name" --save
 ```
 
 ## Documentation

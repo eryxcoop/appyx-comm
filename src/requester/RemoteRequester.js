@@ -1,5 +1,7 @@
 import {Requester} from "./Requester";
 import UnexpectedErrorResponse from "../responses/generalResponses/UnexpectedErrorResponse";
+import MultiPartEncoder from "./encoders/MultiPartEncoder.js";
+import JsonEncoder from "./encoders/JsonEncoder.js";
 
 
 export default class RemoteRequester extends Requester {
@@ -77,67 +79,6 @@ export default class RemoteRequester extends Requester {
     _encoderFor(contentType) {
         let encoders = [new JsonEncoder(), new MultiPartEncoder()];
         return encoders.find(enc => enc.accepts(contentType));
-    }
-}
-
-class Encoder {
-    accepts(mimeType) {
-        throw new Error("You have to implement the method");
-    }
-
-    headers() {
-        throw new Error("You have to implement the method");
-    }
-
-    encode(requestBody) {
-        throw new Error("You have to implement the method");
-    }
-}
-
-class MultiPartEncoder extends Encoder {
-    accepts(mimeType) {
-        return mimeType === 'multipart/form-data'
-    }
-
-    headers() {
-        return {}
-    }
-
-    encode(requestBody) {
-        let formData = new FormData();
-
-        for (let field in requestBody) {
-            let value = requestBody[field];
-
-            if (value !== undefined) {
-                formData.append(field, value);
-            }
-        }
-
-        return formData;
-    }
-
-    _generateBodyFromFiles(files) {
-        let formData = new FormData();
-        Object.keys(files).forEach(key => {
-            const file = files[key];
-            formData.append(key, file);
-        });
-        return formData
-    }
-}
-
-class JsonEncoder extends Encoder {
-    accepts(mimeType) {
-        return mimeType === 'application/json'
-    }
-
-    headers() {
-        return {'Content-Type': 'application/json'}
-    }
-
-    encode(requestBody) {
-        return JSON.stringify(requestBody);
     }
 }
 

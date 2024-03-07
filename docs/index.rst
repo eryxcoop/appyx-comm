@@ -14,9 +14,10 @@ Appy-Comm is a library to help you to communicate with Appyx, but also if your a
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Developer
 
+   examples
    contributing
    maintaining
    branding

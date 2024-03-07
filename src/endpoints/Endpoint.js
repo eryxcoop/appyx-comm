@@ -17,6 +17,14 @@ export default class Endpoint {
         return 'POST'
     }
 
+    static putMethod() {
+        return 'PUT'
+    }
+
+    static deleteMethod() {
+        return 'DELETE'
+    }
+
     static url() {
         throw new Error("You have to implement the method");
     }

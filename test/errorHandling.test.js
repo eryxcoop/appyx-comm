@@ -217,6 +217,46 @@ test('Test multiple responses can be set but only received is handled', async ()
 });
 
 
+test('Generic success cases can be handled', async () => {
+    // Given a client
+    const requester = dummyRequesterExpectingSuccessfulResponse();
+
+    const client = new ExampleApiClient(requester);
+
+    //  but has a handler for successful responses
+    const customResponseHandler = new ApiResponseHandler(
+        {
+            handlesSuccess: (response, request) => {
+                return 'alles gut!';
+            }
+        }
+    );
+    const response = await client.exampleEndpoint(customResponseHandler);
+
+    // Then the response is handled by the custom response handler
+    expect(response).toBe('alles gut!')
+});
+
+test('Generic error cases can be handled', async () => {
+    // Given a client
+    const requester = dummyRequesterExpectingAuthenticationErrorResponse();
+
+    const client = new ExampleApiClient(requester);
+
+    //  but has a handler for successful responses
+    const customResponseHandler = new ApiResponseHandler(
+        {
+            handlesError: (response, request) => {
+                return 'alles nicht gut!';
+            }
+        }
+    );
+    const response = await client.exampleEndpoint(customResponseHandler);
+
+    // Then the response is handled by the custom response handler
+    expect(response).toBe('alles nicht gut!')
+});
+
 function dummyRequesterExpectingSuccessfulResponse() {
     const requester = new DummyRequester();
     requester.setExpectedResponses(

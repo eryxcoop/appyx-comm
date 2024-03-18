@@ -1,0 +1,1 @@
+.. mdinclude:: ./EXAMPLES.md

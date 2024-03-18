@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Requesters &#8212; appyx-comm  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Appyx-Comm" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">appyx-comm</a></h1>
+
+
+
+<p class="blurb">A small communication library</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Requesters</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#endpoints"><code class="docutils literal notranslate"><span class="pre">Endpoints</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#responses"><code class="docutils literal notranslate"><span class="pre">Responses</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#response-handler"><code class="docutils literal notranslate"><span class="pre">Response</span> <span class="pre">Handler</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-use">Basic use</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multiple-response-handler">Multiple response handler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#successful-and-error-responses">Successful and error responses</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#apiclient"><code class="docutils literal notranslate"><span class="pre">ApiClient</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#authentication">Authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#running-tests">Running tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#testing-package-locally">Testing package locally</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#publishing">Publishing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#automatic-release">Automatic release</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#manual-release-if-automatic-release-fails">Manual release (if automatic release fails)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script><div style="height: 90px; width: 180px; margin-top: 15px;">
+    <span>
+        <a href="https://eryx.co" style="border:none;"  target="_blank">
+            <img src="_static/eryx.png" alt="Eryx Open Source" />
+        </a>
+    </span>
+</div>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="requesters">
+<h1><code class="docutils literal notranslate"><span class="pre">Requesters</span></code><a class="headerlink" href="#requesters" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">RemoteRequester</span></code> is class that represents a requester. It is used to make requests to the api. You can create your own requester by extending this class.</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1">// We create remote requester</span>
+<span class="linenos">2</span><span class="kd">const</span><span class="w"> </span><span class="nx">authorizationManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppAuthorizationManager</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<span class="linenos">3</span><span class="kd">const</span><span class="w"> </span><span class="nx">remoteRequester</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">RemoteRequester</span><span class="p">(</span><span class="nx">remoteApiUrl</span><span class="p">,</span><span class="w"> </span><span class="nx">authorizationManager</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">FakeRequester</span></code> can be used if you are testing your application without having a server running on the other side. Fake will
+respond the <code class="docutils literal notranslate"><span class="pre">defaultResponse</span></code> you indicate in your expected response.</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1">// We create fake requester</span>
+<span class="linenos">2</span><span class="kd">const</span><span class="w"> </span><span class="nx">remoteRequester</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">FakeRequester</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="endpoints">
+<h1><code class="docutils literal notranslate"><span class="pre">Endpoints</span></code><a class="headerlink" href="#endpoints" title="Link to this heading">¶</a></h1>
+<p>When you create and <code class="docutils literal notranslate"><span class="pre">Endpoint</span></code> you are defining where the request should be made, what type of request is it and what kind of responses should you expect.
+Your ApiClient will be able to execute the endpoint you created.
+For example, you can create an endpoint like this:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w">  </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExampleEndpoint</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Endpoint</span><span class="p">{</span>
+<span class="linenos"> 2</span><span class="w">    </span><span class="nx">url</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 3</span><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;example_url&quot;</span><span class="p">;</span>
+<span class="linenos"> 4</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="w">    </span><span class="nx">ownResponses</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 7</span><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">[</span><span class="nx">GetExampleResponse</span><span class="p">];</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="w">    </span><span class="nx">method</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">11</span><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="kr">constructor</span><span class="p">.</span><span class="nx">getMethod</span><span class="p">();</span>
+<span class="linenos">12</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="w">    </span><span class="nx">needsAuthorization</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">15</span><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="linenos">16</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">17</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="w">  </span><span class="c1">// Now you can use it like this</span>
+<span class="linenos">21</span><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">endpointToExample</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ExampleEndpoint</span><span class="p">();</span>
+<span class="linenos">22</span><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">_callEndpoint</span><span class="p">(</span><span class="nx">endpointToExample</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="responses">
+<h1><code class="docutils literal notranslate"><span class="pre">Responses</span></code><a class="headerlink" href="#responses" title="Link to this heading">¶</a></h1>
+<p>Every time you make a call to the api, you will (usually) receive a response. Response is here for you to represent that response.
+That way you can easily tell your endpoint what kind of responses it should expect.
+You can use already created responses in the library such as  <code class="docutils literal notranslate"><span class="pre">SuccessfulApiResponse</span></code> or you can create your own to
+make use of its full potential and ask your response for specific information</p>
+<p>Here is an example of a response:}</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w">  </span><span class="c1">// We extend from successful api response because we are representing the successful response of our call.</span>
+<span class="linenos"> 2</span><span class="w">  </span><span class="kd">class</span><span class="w"> </span><span class="nx">ExampleSuccessfulResponse</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">SuccessfulApiResponse</span><span class="p">{</span>
+<span class="linenos"> 3</span><span class="w">    </span><span class="c1">// We leave an example of the type of response you expect</span>
+<span class="linenos"> 4</span><span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">defaultResponse</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 5</span><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 6</span><span class="w">        </span><span class="nx">object</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 7</span><span class="w">          </span><span class="nx">example</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 8</span><span class="w">            </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
+<span class="linenos"> 9</span><span class="w">          </span><span class="p">},</span>
+<span class="linenos">10</span><span class="w">        </span><span class="p">},</span>
+<span class="linenos">11</span><span class="w">        </span><span class="nx">errors</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="linenos">12</span><span class="w">      </span><span class="p">};</span>
+<span class="linenos">13</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="w">    </span><span class="nx">get</span><span class="w"> </span><span class="nx">exampleValue</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">16</span><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">content</span><span class="p">().</span><span class="nx">example</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+<span class="linenos">17</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">18</span><span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="response-handler">
+<h1><code class="docutils literal notranslate"><span class="pre">Response</span> <span class="pre">Handler</span></code><a class="headerlink" href="#response-handler" title="Link to this heading">¶</a></h1>
+<section id="basic-use">
+<h2>Basic use<a class="headerlink" href="#basic-use" title="Link to this heading">¶</a></h2>
+<p>Response handlers are used to handle responses received from api requests. Every time you make a call you can indicate the way
+every expected response should be handled. For example, you can indicate that every successful response should be handled by running a function.
+Note that <code class="docutils literal notranslate"><span class="pre">ResponseHandler</span></code> is an immutable object, so every time you indicate the way responses should be handled, you are actually overriding the default response handler.</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">customResponseHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ApiResponseHandler</span><span class="p">.</span><span class="k">for</span><span class="p">(</span>
+<span class="linenos">2</span><span class="w">      </span><span class="nx">SuccessfulApiResponse</span><span class="p">,</span>
+<span class="linenos">3</span><span class="w">      </span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">4</span><span class="w">          </span><span class="nx">doSomething</span><span class="p">();</span>
+<span class="linenos">5</span><span class="w">      </span><span class="p">},</span>
+<span class="linenos">6</span><span class="w">  </span><span class="p">);</span>
+<span class="linenos">7</span>
+<span class="linenos">8</span><span class="w">  </span><span class="c1">// doSomething() will be called if exampleEndpoint returns a SuccessfulApiResponse</span>
+<span class="linenos">9</span><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">exampleEndpoint</span><span class="p">(</span><span class="nx">customResponseHandler</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Sometimes you want to handle an specific response always in the same way. For example, you may want to handle every 401 response by authenticating the user again. To do this
+you have to indicate all your general responses handlers in the client constructor. For example:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">generalResponsesHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ApiResponseHandler</span><span class="p">.</span><span class="k">for</span><span class="p">(</span>
+<span class="linenos">2</span><span class="w">      </span><span class="nx">AuthenticationErrorResponse</span><span class="p">,</span>
+<span class="linenos">3</span><span class="w">      </span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">4</span><span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="nx">authenticateUserAgain</span><span class="p">();</span>
+<span class="linenos">5</span><span class="w">      </span><span class="p">},</span>
+<span class="linenos">6</span><span class="w">  </span><span class="p">);</span>
+<span class="linenos">7</span><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ExampleApiClient</span><span class="p">(</span><span class="nx">requester</span><span class="p">,</span><span class="w"> </span><span class="nx">generalResponsesHandler</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="multiple-response-handler">
+<h2>Multiple response handler<a class="headerlink" href="#multiple-response-handler" title="Link to this heading">¶</a></h2>
+<p>In order to have multiple  responses to consider, you can clarify them all with the <code class="docutils literal notranslate"><span class="pre">handler</span></code> method. Remember that <code class="docutils literal notranslate"><span class="pre">ApiResponseHandler</span></code> is an unmutable object, so everytime a
+response is add it will return a new <code class="docutils literal notranslate"><span class="pre">ApiResponseHandler</span></code> object. For example:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">responsesHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ApiResponseHandler</span><span class="p">();</span>
+<span class="linenos"> 2</span><span class="w">  </span><span class="nx">responsesHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">responseHandler</span><span class="p">.</span><span class="nx">handles</span><span class="p">(</span>
+<span class="linenos"> 3</span><span class="w">      </span><span class="nx">SuccessfulApiResponse</span><span class="p">,</span>
+<span class="linenos"> 4</span><span class="w">      </span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 5</span><span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="nx">doSomething</span><span class="p">();</span>
+<span class="linenos"> 6</span><span class="w">      </span><span class="p">},</span>
+<span class="linenos"> 7</span><span class="w">  </span><span class="p">);</span>
+<span class="linenos"> 8</span><span class="w">  </span><span class="nx">responsesHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">responseHandler</span><span class="p">.</span><span class="nx">handles</span><span class="p">(</span>
+<span class="linenos"> 9</span><span class="w">      </span><span class="nx">AuthenticationErrorResponse</span><span class="p">,</span>
+<span class="linenos">10</span><span class="w">      </span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">11</span><span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="nx">authenticateUserAgain</span><span class="p">();</span>
+<span class="linenos">12</span><span class="w">      </span><span class="p">},</span>
+<span class="linenos">13</span><span class="w">  </span><span class="p">);</span>
+<span class="linenos">14</span><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ExampleApiClient</span><span class="p">(</span><span class="nx">requester</span><span class="p">,</span><span class="w"> </span><span class="nx">responsesHandler</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Now you may be wondering, what happens if I want to handle a specific response in a different way? Well, you can already do that! every time you indicate
+the way responses should be handled, you are actually overriding the default response handler. So, if you want to handle a specific response in a different way,
+just override the default response handler again.</p>
+</section>
+<section id="successful-and-error-responses">
+<h2>Successful and error responses<a class="headerlink" href="#successful-and-error-responses" title="Link to this heading">¶</a></h2>
+<p>Sometimes you may want to have only two different cases to handle, successful responses and error responses. You can do that by:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">responsesHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ApiResponseHandler</span><span class="p">();</span>
+<span class="linenos"> 2</span><span class="w">  </span><span class="nx">responsesHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">responseHandler</span>
+<span class="linenos"> 3</span><span class="w">                      </span><span class="p">.</span><span class="nx">handlesSuccess</span><span class="p">((</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 4</span><span class="w">                          </span><span class="k">return</span><span class="w"> </span><span class="nx">doSomething</span><span class="p">();</span>
+<span class="linenos"> 5</span><span class="w">                      </span><span class="p">},</span>
+<span class="linenos"> 6</span><span class="w">                      </span><span class="p">).</span><span class="nx">handlesError</span><span class="p">((</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 7</span><span class="w">                              </span><span class="k">return</span><span class="w"> </span><span class="nx">authenticateUserAgain</span><span class="p">();</span>
+<span class="linenos"> 8</span><span class="w">                          </span><span class="p">},</span>
+<span class="linenos"> 9</span><span class="w">                      </span><span class="p">);</span>
+<span class="linenos">10</span><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ExampleApiClient</span><span class="p">(</span><span class="nx">requester</span><span class="p">,</span><span class="w"> </span><span class="nx">responsesHandler</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="apiclient">
+<h1><code class="docutils literal notranslate"><span class="pre">ApiClient</span></code><a class="headerlink" href="#apiclient" title="Link to this heading">¶</a></h1>
+<p>Finally, you can create your own ApiClient by extending the <code class="docutils literal notranslate"><span class="pre">ApiClient</span></code> class. This class is the one that will be used to make the requests to the api.</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w">  </span><span class="kd">class</span><span class="w"> </span><span class="nx">MyApiClient</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">ApiClient</span><span class="p">{</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="w">    </span><span class="nx">registerNewUser</span><span class="p">(</span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">password</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 4</span><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">endpoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">RegisterUserEndpoint</span><span class="p">();</span>
+<span class="linenos"> 5</span><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_callEndpoint</span><span class="p">(</span><span class="nx">endpoint</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">password</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="w"> </span><span class="p">});</span>
+<span class="linenos"> 6</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos"> 7</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="w">  </span><span class="c1">// We create remote requester</span>
+<span class="linenos">10</span><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">authorizationManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppAuthorizationManager</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<span class="linenos">11</span><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">remoteRequester</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">RemoteRequester</span><span class="p">(</span><span class="nx">remoteApiUrl</span><span class="p">,</span><span class="w"> </span><span class="nx">authorizationManager</span><span class="p">);</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="w">  </span><span class="c1">// We create responses handler</span>
+<span class="linenos">14</span><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">apiResponseHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ApiResponseHandler</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="w">  </span><span class="c1">// We create the client</span>
+<span class="linenos">17</span><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">endpointToExample</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">MyApiClient</span><span class="p">(</span><span class="nx">remoteRequester</span><span class="p">,</span><span class="w"> </span><span class="nx">responsesHandler</span><span class="p">);</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span><span class="w">  </span><span class="c1">// We use it to register a new user</span>
+<span class="linenos">20</span><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">registerNewUser</span><span class="p">(</span><span class="nx">endpointToExample</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2024, Eryx.
+      
+      |
+      <a href="_sources/guide.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

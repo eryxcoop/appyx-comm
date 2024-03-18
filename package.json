@@ -3,7 +3,8 @@
   "version": "1.0.4",
   "description": "Paquete de comunicación web",
   "main": "index.js",
-  "type": "module",
+  "source": "index.js",
+  "module": "index.js",
   "scripts": {
     "test": "vitest"
   },

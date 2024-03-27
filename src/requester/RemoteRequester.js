@@ -21,7 +21,7 @@ export default class RemoteRequester extends Requester {
         return fetch(this._baseUrl + "/" + url, request).then(result => result.json())
             .then(jsonResponse => {
                 return this._buildResponse(jsonResponse, endpoint)
-            })
+            }).catch(error => console.log(error));
     }
 
     _buildRequest(endpoint, data) {

@@ -11,7 +11,7 @@ export default class RemoteRequester extends Requester {
         this._authorizationManager = authorizationManager;
     }
 
-    call({endpoint, data = undefined}) {
+    async call({endpoint, data = undefined}) {
         const request = this._buildRequest(endpoint, data);
         let url = endpoint.url();
         if (endpoint.isGetMethod() && data) {

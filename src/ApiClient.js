@@ -44,18 +44,14 @@ export default class ApiClient {
 
   async _callEndpoint(endpoint, values, customResponseHandler) {
     try {
-      const response = await this._call(endpoint, values);
+      const response = await this._requester.call({
+        endpoint: endpoint,
+        data: endpoint.adaptValues(values)
+      });
       return this._handleResponseForRequest(response, endpoint, values, customResponseHandler);
     } catch (exception) {
       this._handleException(exception)
     }
-  }
-
-  _call(endpoint, values) {
-    return this._requester.call({
-      endpoint: endpoint,
-      data: endpoint.adaptValues(values)
-    });
   }
 
 }

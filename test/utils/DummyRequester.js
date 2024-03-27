@@ -10,7 +10,7 @@ export class DummyRequester extends Requester {
         this._expectedResponses = expectedResponses;
     }
 
-    call({endpoint, data = undefined}) {
+    async call({endpoint, data = undefined}) {
         return this._expectedResponses;
     }
 }

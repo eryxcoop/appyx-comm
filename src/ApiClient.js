@@ -42,12 +42,13 @@ export default class ApiClient {
   }
 
 
-  _callEndpoint(endpoint, values, customResponseHandler) {
-    return this._call(endpoint, values).then(
-      response => this._handleResponseForRequest(response, endpoint, values, customResponseHandler)
-    ).catch(
-      exception => this._handleException(exception)
-    )
+  async _callEndpoint(endpoint, values, customResponseHandler) {
+    try {
+      const response = await this._call(endpoint, values);
+      return this._handleResponseForRequest(response, endpoint, values, customResponseHandler);
+    } catch (exception) {
+      this._handleException(exception)
+    }
   }
 
   _call(endpoint, values) {

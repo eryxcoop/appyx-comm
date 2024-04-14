@@ -8,7 +8,7 @@ Imagine having a access token and a refresh token. Given a specific time, the ac
 You may not want to be checking the expiration time of the access token every time you make a request. You can a generic response handler, that will try to authenticate
 the user if the response status is 401.
 
-```javascript
+```js
 const generalErrorHandler = ApiResponseHandler.for(
     AuthenticationErrorResponse,
     async () => {
@@ -29,6 +29,6 @@ const generalErrorHandler = ApiResponseHandler.for(
 
 Now we can create our ApiClient using this generalErrorHandler.
 
-```javascript
+```js
 const apiClient = new ApiClient(generalErrorHandler);
 ```

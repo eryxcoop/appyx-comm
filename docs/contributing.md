@@ -63,7 +63,7 @@ number. The release will be created automatically by the CI/CD pipeline.
 
 Please clarify changes in the release description.
 
-### Manual release (if automatic release fails)
+### Manual release
 
 If release creation fails to publish new version, you can create it manually. First ensure your NPM_TOKEN is set
 by running the following command:

@@ -5,22 +5,18 @@
 ``RemoteRequester`` is class that represents a requester. It is used to make requests to the api. You can create your
 own requester by extending this class.
 
-.. code-block:: javascript
-:linenos:
-
-// We create remote requester
+```js
 const authorizationManager = new AppAuthorizationManager(this);
 const remoteRequester = new RemoteRequester(remoteApiUrl, authorizationManager);
+```
 
 ``FakeRequester`` can be used if you are testing your application without having a server running on the other side.
 Fake will
 respond the ``defaultResponse`` you indicate in your expected response.
 
-.. code-block:: javascript
-:linenos:
-
-// We create fake requester
+```js
 const remoteRequester = new FakeRequester();
+```
 
 ## Endpoints
 
@@ -30,7 +26,6 @@ Your ApiClient will be able to execute the endpoint you created.
 For example, you can create an endpoint like this:
 
 ```js
-
 class ExampleEndpoint extends Endpoint {
   url() {
     return "example_url";
@@ -67,24 +62,23 @@ Here is an example of a response:}
 
 ```js
 // We extend from successful api response because we are representing the successful response of our call.
-class ExampleSuccessfulResponse extends SuccessfulApiResponse{
+class ExampleSuccessfulResponse extends SuccessfulApiResponse {
   static defaultResponse() {
-        return {
-          object: {
-            example: {
-              value: 1,
-            },
-          },
-          errors: [],
-        };
-      }
+    return {
+      object: {
+        example: {
+          value: 1,
+        },
+      },
+      errors: [],
+    };
+  }
 
-      get exampleValue() {
-        return this.content().example.value;
-      }
-    }
+  get exampleValue() {
+    return this.content().example.value;
+  }
+}
 ```
-
 
 ## Response Handler
 
@@ -102,7 +96,7 @@ const customResponseHandler = ApiResponseHandler.for(
   SuccessfulApiResponse,
   (response, request) => {
     doSomething();
-    },
+  },
 );
 
 // doSomething() will be called if exampleEndpoint returns a SuccessfulApiResponse
@@ -118,8 +112,8 @@ const generalResponsesHandler = ApiResponseHandler.for(
   AuthenticationErrorResponse,
   (response, request) => {
     return authenticateUserAgain();
-    },
-); 
+  },
+);
 const client = new ExampleApiClient(requester, generalResponsesHandler);
 ```
 
@@ -131,17 +125,17 @@ response is add it will return a new ``ApiResponseHandler`` object. For example:
 
 ```js
 let responsesHandler = new ApiResponseHandler();
-responsesHandler = responseHandler.handles(   
+responsesHandler = responseHandler.handles(
   SuccessfulApiResponse,
   (response, request) => {
     return doSomething();
-    },
+  },
 );
 responsesHandler = responseHandler.handles(
   AuthenticationErrorResponse,
   (response, request) => {
     return authenticateUserAgain();
-    },
+  },
 );
 const client = new ExampleApiClient(requester, responsesHandler);
 ```
@@ -161,10 +155,10 @@ that by:
 let responsesHandler = new ApiResponseHandler();
 responsesHandler = responseHandler
   .handlesSuccess((response, request) => {
-    return doSomething();
+      return doSomething();
     },
   ).handlesError((response, request) => {
-    return authenticateUserAgain();
+      return authenticateUserAgain();
     },
   );
 const client = new ExampleApiClient(requester, responsesHandler);

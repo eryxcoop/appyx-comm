@@ -47,7 +47,31 @@ class ExampleEndpoint extends Endpoint {
 
 // Now you can use it like this
 const endpointToExample = new ExampleEndpoint();
-const response = await client._callEndpoint(endpointToExample);
+const response = await client.callEndpoint(endpointToExample);
+```
+
+Now from v1.0.6 you can use the ``Endpoint`` class to create your own endpoints. This way you can avoid creating multiple
+endpoints files and stop using heritage.
+
+```js
+const getAuthenticatedEndpoint = Endpoint.newGet(
+  {
+    url:"my/examplet/endpoint/path",
+    ownResponses:[GetExampleResponse]
+  }
+);
+```
+
+By default endpoint will require authorization, but you can specify otherwise.
+
+```js
+const getNotAuthenticatedEndpoint = Endpoint.newGet(
+  {
+    url:"my/examplet/endpoint/path",
+    ownResponses:[GetExampleResponse],
+    needsAuthorization:false
+  }
+);
 ```
 
 ## Responses
@@ -174,7 +198,7 @@ class MyApiClient extends ApiClient {
 
   registerNewUser(email, password, name) {
     const endpoint = new RegisterUserEndpoint();
-    return this._callEndpoint(endpoint, {email, password, name});
+    return this.callEndpoint(endpoint, {email, password, name});
   }
 }
 

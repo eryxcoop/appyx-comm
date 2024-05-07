@@ -9,73 +9,101 @@ import SuccessfulApiResponse from "../responses/generalResponses/SuccessfulApiRe
 
 export default class Endpoint {
 
-    static getMethod() {
-        return 'GET'
-    }
+  constructor({url, method, ownResponses = undefined, needsAuthorization = true}) {
+    this._url = url;
+    this._method = method;
+    this._ownResponses = ownResponses || [];
+    this._needsAuthorization = needsAuthorization;
+  }
 
-    static postMethod() {
-        return 'POST'
-    }
+  static newGet({url, ownResponses, needsAuthorization}) {
+    return Endpoint.newFor({url, ownResponses, needsAuthorization, method: Endpoint.getMethod()});
+  }
 
-    static putMethod() {
-        return 'PUT'
-    }
+  static newPost({url, ownResponses, needsAuthorization}) {
+    return Endpoint.newFor({url, ownResponses, needsAuthorization, method: Endpoint.postMethod()});
+  }
 
-    static deleteMethod() {
-        return 'DELETE'
-    }
+  static newPut({url, ownResponses, needsAuthorization}) {
+    return Endpoint.newFor({url, ownResponses, needsAuthorization, method: Endpoint.putMethod()});
+  }
 
-    static url() {
-        throw new Error("You have to implement the method");
-    }
+  static newDelete({url, ownResponses, needsAuthorization}) {
+    return Endpoint.newFor({url, ownResponses, needsAuthorization, method: Endpoint.deleteMethod()});
+  }
 
-    generalResponses() {
-        return [
-            SuccessfulApiResponse,
-            AuthenticationErrorResponse,
-            PermissionErrorResponse,
-            SimpleErrorResponse,
-            ParametersValidationErrorResponse,
-            ParameterValidationErrorResponse,
-            UnexpectedErrorResponse,
-        ]
-    }
+  static newFor({url, ownResponses, needsAuthorization, method}) {
+    return new Endpoint({
+      url: url,
+      method: method,
+      ownResponses: ownResponses,
+      needsAuthorization: needsAuthorization
+    });
+  }
 
-    ownResponses() {
-        /*
-            Override this in order to provide custom responses
-        "*/
-        return []
-    }
+  static getMethod() {
+    return 'GET'
+  }
 
-    responses() {
-        /*
-            Own responses have more precedence over the general responses
-        "*/
-        return this.ownResponses().concat(this.generalResponses())
-    }
+  static postMethod() {
+    return 'POST'
+  }
 
-    url() {
-        return this.constructor.url();
-    }
+  static putMethod() {
+    return 'PUT'
+  }
 
-    contentType() {
-        return 'application/json';
-    }
+  static deleteMethod() {
+    return 'DELETE'
+  }
 
-    method() {
-        throw new Error("You have to implement the method");
-    }
+  generalResponses() {
+    return [
+      SuccessfulApiResponse,
+      AuthenticationErrorResponse,
+      PermissionErrorResponse,
+      SimpleErrorResponse,
+      ParametersValidationErrorResponse,
+      ParameterValidationErrorResponse,
+      UnexpectedErrorResponse,
+    ]
+  }
 
-    needsAuthorization() {
-        throw new Error("You have to implement the method");
-    }
+  ownResponses() {
+    /*
+      Provide custom responses
+    */
+    return this._ownResponses
+  }
 
-    isGetMethod(){
-        return this.method() === this.constructor.getMethod()
-    }
+  responses() {
+    /*
+        Own responses have more precedence over the general responses
+    "*/
+    return this.ownResponses().concat(this.generalResponses())
+  }
 
-    adaptValues(values){
-        return values
-    }
+  url() {
+    return this._url;
+  }
+
+  contentType() {
+    return 'application/json';
+  }
+
+  method() {
+    return this._method;
+  }
+
+  needsAuthorization() {
+    return this._needsAuthorization;
+  }
+
+  isGetMethod() {
+    return this.method() === this.constructor.getMethod()
+  }
+
+  adaptValues(values) {
+    return values
+  }
 }

@@ -9,34 +9,36 @@ import SuccessfulApiResponse from "../responses/generalResponses/SuccessfulApiRe
 
 export default class Endpoint {
 
-  constructor({url, method, ownResponses = undefined, needsAuthorization = true}) {
+  constructor({url, method, ownResponses = undefined, needsAuthorization = true, contentType = 'application/json'}) {
     this._url = url;
     this._method = method;
     this._ownResponses = ownResponses || [];
     this._needsAuthorization = needsAuthorization;
+    this._contentType = contentType || 'application/json';
   }
 
-  static newGet({url, ownResponses, needsAuthorization}) {
-    return Endpoint.newFor({url, ownResponses, needsAuthorization, method: Endpoint.getMethod()});
+  static newGet({url, ownResponses, needsAuthorization, contentType}) {
+    return Endpoint.newFor({url, ownResponses, needsAuthorization, contentType, method: Endpoint.getMethod()});
   }
 
-  static newPost({url, ownResponses, needsAuthorization}) {
-    return Endpoint.newFor({url, ownResponses, needsAuthorization, method: Endpoint.postMethod()});
+  static newPost({url, ownResponses, needsAuthorization, contentType}) {
+    return Endpoint.newFor({url, ownResponses, needsAuthorization, contentType, method: Endpoint.postMethod()});
   }
 
-  static newPut({url, ownResponses, needsAuthorization}) {
-    return Endpoint.newFor({url, ownResponses, needsAuthorization, method: Endpoint.putMethod()});
+  static newPut({url, ownResponses, needsAuthorization, contentType}) {
+    return Endpoint.newFor({url, ownResponses, needsAuthorization, contentType, method: Endpoint.putMethod()});
   }
 
-  static newDelete({url, ownResponses, needsAuthorization}) {
-    return Endpoint.newFor({url, ownResponses, needsAuthorization, method: Endpoint.deleteMethod()});
+  static newDelete({url, ownResponses, needsAuthorization, contentType}) {
+    return Endpoint.newFor({url, ownResponses, needsAuthorization, contentType, method: Endpoint.deleteMethod()});
   }
 
-  static newFor({url, ownResponses, needsAuthorization, method}) {
+  static newFor({url, ownResponses, needsAuthorization, method, contentType}) {
     return new Endpoint({
       url: url,
       method: method,
       ownResponses: ownResponses,
+      contentType: contentType,
       needsAuthorization: needsAuthorization
     });
   }
@@ -88,7 +90,7 @@ export default class Endpoint {
   }
 
   contentType() {
-    return 'application/json';
+    return this._contentType;
   }
 
   method() {

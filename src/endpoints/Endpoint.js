@@ -9,7 +9,7 @@ import SuccessfulApiResponse from "../responses/generalResponses/SuccessfulApiRe
 
 export default class Endpoint {
 
-  constructor({url, method, ownResponses = undefined, needsAuthorization = true, contentType = 'application/json'}) {
+  constructor({url, method, ownResponses = undefined, needsAuthorization = true, contentType = undefined}) {
     this._url = url;
     this._method = method;
     this._ownResponses = ownResponses || [];
@@ -31,6 +31,10 @@ export default class Endpoint {
 
   static newDelete({url, ownResponses, needsAuthorization, contentType}) {
     return Endpoint.newFor({url, ownResponses, needsAuthorization, contentType, method: Endpoint.deleteMethod()});
+  }
+
+  static newPatch({url, ownResponses, needsAuthorization, contentType}) {
+    return Endpoint.newFor({url, ownResponses, needsAuthorization, contentType, method: Endpoint.patchMethod()});
   }
 
   static newFor({url, ownResponses, needsAuthorization, method, contentType}) {
@@ -57,6 +61,10 @@ export default class Endpoint {
 
   static deleteMethod() {
     return 'DELETE'
+  }
+
+  static patchMethod() {
+    return 'PATCH'
   }
 
   generalResponses() {

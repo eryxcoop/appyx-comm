@@ -50,14 +50,15 @@ const endpointToExample = new ExampleEndpoint();
 const response = await client.callEndpoint(endpointToExample);
 ```
 
-Now from v1.0.6 you can use the ``Endpoint`` class to create your own endpoints. This way you can avoid creating multiple
+Now from v1.0.6 you can use the ``Endpoint`` class to create your own endpoints. This way you can avoid creating
+multiple
 endpoints files and stop using heritage.
 
 ```js
 const getAuthenticatedEndpoint = Endpoint.newGet(
   {
-    url:"my/examplet/endpoint/path",
-    ownResponses:[GetExampleResponse]
+    url: "my/examplet/endpoint/path",
+    ownResponses: [GetExampleResponse]
   }
 );
 ```
@@ -67,12 +68,14 @@ By default endpoint will require authorization, but you can specify otherwise.
 ```js
 const getNotAuthenticatedEndpoint = Endpoint.newGet(
   {
-    url:"my/examplet/endpoint/path",
-    ownResponses:[GetExampleResponse],
-    needsAuthorization:false
+    url: "my/examplet/endpoint/path",
+    ownResponses: [GetExampleResponse],
+    needsAuthorization: false
   }
 );
 ```
+
+Supported methods are: `GET`, `POST`, `PUT`, `DELETE`, `PATCH`.
 
 ## Responses
 
@@ -190,15 +193,23 @@ const client = new ExampleApiClient(requester, responsesHandler);
 
 ## ApiClient
 
-Finally, you can create your own ApiClient by extending the ``ApiClient`` class. This class is the one that will be used
+Finally, you can create your own ApiClient using ``ApiClient`` class. This class is the one that will be used
 to make the requests to the api.
 
-```js
-class MyApiClient extends ApiClient {
+We add a small example of a complete case of use:
 
-  registerNewUser(email, password, name) {
+```js
+class MyApiClient {
+  
+  // We recommend to create you own api client to sum up all the calls you will make to the api
+
+  constructor(requester) {
+    this._apiClient = new ApiClient(requester);
+  }
+
+  registerNewUser(email, responseHandler) {
     const endpoint = new RegisterUserEndpoint();
-    return this.callEndpoint(endpoint, {email, password, name});
+    return this._apiClient.callEndpoint(endpoint, {email}, responseHandler);
   }
 }
 
@@ -206,12 +217,19 @@ class MyApiClient extends ApiClient {
 const authorizationManager = new AppAuthorizationManager(this);
 const remoteRequester = new RemoteRequester(remoteApiUrl, authorizationManager);
 
-// We create responses handler
-const apiResponseHandler = new ApiResponseHandler(this);
-
 // We create the client
-const endpointToExample = new MyApiClient(remoteRequester, responsesHandler);
+const endpointToExample = new MyApiClient(remoteRequester);
 
-// We use it to register a new user
-const response = await client.registerNewUser(endpointToExample);
+// We create responses handler for registering a new user
+const responseHandler = new ApiResponseHandler({
+  handlesError: (error) => {
+    console.log(error);
+  },
+  handlesSuccess: (response) => {
+    console.log("success!!")
+  }
+});
+
+// We register a new user
+client.registerNewUser("delfi@brea.com", responseHandler);
 ```

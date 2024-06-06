@@ -1,5 +1,5 @@
 import Endpoint from "../src/endpoints/Endpoint";
-import {SuccessfulApiResponse} from "../index";
+import {FakeRequester, SuccessfulApiResponse} from "../index";
 import ApiClient from "../src/ApiClient";
 import ApiResponseHandler from "../src/errors/ApiResponseHandler.js";
 import AuthenticationErrorResponse from "../src/responses/generalResponses/AuthenticationErrorResponse";
@@ -7,37 +7,77 @@ import AuthenticationErrorResponse from "../src/responses/generalResponses/Authe
 import {expect, test} from 'vitest'
 import {DummyRequester} from "./utils/DummyRequester.js";
 
-class ExampleEndpoint extends Endpoint {
-  url() {
-    return "example/example";
-  }
-
-  method() {
-    return "GET";
-  }
-
-  needsAuthorization() {
-    return false;
-  }
-
-  responses() {
-    return [SuccessfulApiResponse];
-  }
-
-}
-
 class TestSuccessfulApiResponse extends SuccessfulApiResponse {
+
+  static defaultResponse() {
+    return 'default response'
+  }
+
   understandThis(jsonResponse) {
     return jsonResponse.status === 'ok';
   }
 
+  response() {
+    return this._jsonResponse;
+  }
+}
+
+class AnotherTestSuccessfulApiResponse extends SuccessfulApiResponse {
+
+  static defaultResponse() {
+    return 'not the default response'
+  }
+
+  understandThis(jsonResponse) {
+    return jsonResponse.status === 'ok';
+  }
+
+  response() {
+    return this._jsonResponse;
+  }
 }
 
 class ExampleApiClient extends ApiClient {
   exampleEndpoint(customResponseHandler) {
-    const endpoint = new ExampleEndpoint({});
+    const endpoint = Endpoint.newGet({
+      url: 'example',
+      ownResponses: [SuccessfulApiResponse],
+      needsAuthorization: false,
+    });
     return this.callEndpoint(endpoint, {}, customResponseHandler);
   }
+}
+
+function dummyRequesterExpectingSuccessfulResponse() {
+  const requester = new DummyRequester();
+  requester.setExpectedResponses(
+    new SuccessfulApiResponse(
+      {
+        "object": {'message': "Hi!"},
+        "errors": []
+      }
+    ));
+  return requester;
+}
+
+function dummyRequesterExpectingAuthenticationErrorResponse() {
+  const requester = new DummyRequester();
+  requester.setExpectedResponses(
+    new AuthenticationErrorResponse(
+      {
+        "object": null,
+        "errors": ['errors']
+      }
+    ));
+  return requester;
+}
+
+function endpointWithResponses(responses) {
+  return Endpoint.newGet({
+    url: 'example',
+    ownResponses: responses,
+    needsAuthorization: false,
+  });
 }
 
 test('Test general error handling can be set for api client', async () => {
@@ -283,26 +323,50 @@ test('Endpoint can be created with composition not heritage', async () => {
   expect(response).toBe('alles gut!')
 });
 
-function dummyRequesterExpectingSuccessfulResponse() {
-  const requester = new DummyRequester();
-  requester.setExpectedResponses(
-    new SuccessfulApiResponse(
-      {
-        "object": {'message': "Hi!"},
-        "errors": []
-      }
-    ));
-  return requester;
-}
+// Fake requester
 
-function dummyRequesterExpectingAuthenticationErrorResponse() {
-  const requester = new DummyRequester();
-  requester.setExpectedResponses(
-    new AuthenticationErrorResponse(
-      {
-        "object": null,
-        "errors": ['errors']
+test('When fake requester is used default response is returned', async () => {
+  // Given a client
+  const requester = new FakeRequester();
+  const apiClient = new ApiClient(requester);
+
+  // I can create a get endpoint
+  const getEndpoint = endpointWithResponses([TestSuccessfulApiResponse]);
+
+  const customResponseHandler = new ApiResponseHandler(
+    {
+      handlesSuccess: (response, request) => {
+        return response.response();
       }
-    ));
-  return requester;
-}
+    }
+  );
+
+  const response = await apiClient.callEndpoint(getEndpoint, {}, customResponseHandler);
+
+  // Then the response is handled by the custom response handler
+  expect(response).toBe('default response');
+});
+
+test('When using fake requester default response can be overwritten', async () => {
+  // Given a client
+  const requester = new FakeRequester();
+  const apiClient = new ApiClient(requester);
+
+  // I can create a get endpoint
+  const getEndpoint = endpointWithResponses([TestSuccessfulApiResponse]);
+
+  requester.addStrategicFakeResponseWith({endpoint: getEndpoint, response: AnotherTestSuccessfulApiResponse});
+
+  const customResponseHandler = new ApiResponseHandler(
+    {
+      handlesSuccess: (response, request) => {
+        return response.response();
+      }
+    }
+  );
+
+  const response = await apiClient.callEndpoint(getEndpoint, {}, customResponseHandler);
+
+  // Then the response is handled by the custom response handler
+  expect(response).toBe('not the default response');
+});

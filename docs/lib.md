@@ -2,6 +2,8 @@
 
 ## Requesters
 
+### RemoteRequester
+
 ``RemoteRequester`` is class that represents a requester. It is used to make requests to the api. You can create your
 own requester by extending this class.
 
@@ -10,12 +12,22 @@ const authorizationManager = new AppAuthorizationManager(this);
 const remoteRequester = new RemoteRequester(remoteApiUrl, authorizationManager);
 ```
 
+### FakeRequester
+
 ``FakeRequester`` can be used if you are testing your application without having a server running on the other side.
-Fake will
-respond the ``defaultResponse`` you indicate in your expected response.
+Fake will respond the ``defaultResponse`` you indicate in your expected response of the endpoint you are calling.
+``FakeRequester`` will also mock the waiting time of the request. If you don't indicate a waiting time, it will wait 2500 ms.
+
 
 ```js
-const remoteRequester = new FakeRequester();
+const fakeRequester = new FakeRequester({waitingTime: 2500});
+```
+
+If you don't want to use the default response message, you can override it by passing the response you want to return.
+
+```js
+const fakeRequester = new FakeRequester();
+fakeRequester.addResponseFor(new ExampleEndpoint(), ExampleSuccessfulResponse);
 ```
 
 ## Endpoints
@@ -200,7 +212,7 @@ We add a small example of a complete case of use:
 
 ```js
 class MyApiClient {
-  
+
   // We recommend to create you own api client to sum up all the calls you will make to the api
 
   constructor(requester) {

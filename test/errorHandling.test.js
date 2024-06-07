@@ -327,7 +327,7 @@ test('Endpoint can be created with composition not heritage', async () => {
 
 test('When fake requester is used default response is returned', async () => {
   // Given a client
-  const requester = new FakeRequester();
+  const requester = new FakeRequester({waitingTime: 0});
   const apiClient = new ApiClient(requester);
 
   // I can create a get endpoint
@@ -344,18 +344,18 @@ test('When fake requester is used default response is returned', async () => {
   const response = await apiClient.callEndpoint(getEndpoint, {}, customResponseHandler);
 
   // Then the response is handled by the custom response handler
-  expect(response).toBe('default response');
+  expect(response).toBe(TestSuccessfulApiResponse.defaultResponse());
 });
 
 test('When using fake requester default response can be overwritten', async () => {
   // Given a client
-  const requester = new FakeRequester();
+  const requester = new FakeRequester({waitingTime: 0});
   const apiClient = new ApiClient(requester);
 
   // I can create a get endpoint
   const getEndpoint = endpointWithResponses([TestSuccessfulApiResponse]);
 
-  requester.addStrategicFakeResponseWith({endpoint: getEndpoint, response: AnotherTestSuccessfulApiResponse});
+  requester.addResponseFor({endpoint: getEndpoint, response: AnotherTestSuccessfulApiResponse});
 
   const customResponseHandler = new ApiResponseHandler(
     {
@@ -368,5 +368,5 @@ test('When using fake requester default response can be overwritten', async () =
   const response = await apiClient.callEndpoint(getEndpoint, {}, customResponseHandler);
 
   // Then the response is handled by the custom response handler
-  expect(response).toBe('not the default response');
+  expect(response).toBe(AnotherTestSuccessfulApiResponse.defaultResponse());
 });

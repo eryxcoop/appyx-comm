@@ -8,43 +8,100 @@ import SuccessfulApiResponse from "../responses/generalResponses/SuccessfulApiRe
 
 
 export default class Endpoint {
+  static CONTENT_TYPE_JSON = 'application/json';
+  static CONTENT_TYPE_MULTIPART = 'multipart/form-data';
+  static CONTENT_TYPE_TEXT = 'text/plain';
 
-  constructor({url, method, ownResponses = undefined, needsAuthorization = true, contentType = undefined}) {
+  constructor({
+                url,
+                method,
+                ownResponses = undefined,
+                needsAuthorization = true,
+                contentType = undefined,
+                responseContentType = undefined
+              }) {
     this._url = url;
     this._method = method;
     this._ownResponses = ownResponses || [];
     this._needsAuthorization = needsAuthorization;
-    this._contentType = contentType || 'application/json';
+    this._contentType = contentType || Endpoint.CONTENT_TYPE_JSON;
+    this._responseContentType = responseContentType || Endpoint.CONTENT_TYPE_JSON;
   }
 
-  static newGet({url, ownResponses, needsAuthorization, contentType}) {
-    return Endpoint.newFor({url, ownResponses, needsAuthorization, contentType, method: Endpoint.getMethod()});
+  static newGet({url, ownResponses, needsAuthorization, contentType, responseContentType}) {
+    return Endpoint.newFor({
+      url,
+      ownResponses,
+      needsAuthorization,
+      contentType,
+      responseContentType,
+      method: Endpoint.getMethod()
+    });
   }
 
-  static newPost({url, ownResponses, needsAuthorization, contentType}) {
-    return Endpoint.newFor({url, ownResponses, needsAuthorization, contentType, method: Endpoint.postMethod()});
+  static newPost({url, ownResponses, needsAuthorization, contentType, responseContentType}) {
+    return Endpoint.newFor({
+      url,
+      ownResponses,
+      needsAuthorization,
+      contentType,
+      responseContentType,
+      method: Endpoint.postMethod()
+    });
   }
 
-  static newPut({url, ownResponses, needsAuthorization, contentType}) {
-    return Endpoint.newFor({url, ownResponses, needsAuthorization, contentType, method: Endpoint.putMethod()});
+  static newPut({url, ownResponses, needsAuthorization, contentType, responseContentType}) {
+    return Endpoint.newFor({
+      url,
+      ownResponses,
+      needsAuthorization,
+      contentType,
+      responseContentType,
+      method: Endpoint.putMethod()
+    });
   }
 
-  static newDelete({url, ownResponses, needsAuthorization, contentType}) {
-    return Endpoint.newFor({url, ownResponses, needsAuthorization, contentType, method: Endpoint.deleteMethod()});
+  static newDelete({url, ownResponses, needsAuthorization, contentType, responseContentType}) {
+    return Endpoint.newFor({
+      url,
+      ownResponses,
+      needsAuthorization,
+      contentType,
+      responseContentType,
+      method: Endpoint.deleteMethod()
+    });
   }
 
-  static newPatch({url, ownResponses, needsAuthorization, contentType}) {
-    return Endpoint.newFor({url, ownResponses, needsAuthorization, contentType, method: Endpoint.patchMethod()});
+  static newPatch({url, ownResponses, needsAuthorization, contentType, responseContentType}) {
+    return Endpoint.newFor({
+      url,
+      ownResponses,
+      needsAuthorization,
+      contentType,
+      responseContentType,
+      method: Endpoint.patchMethod()
+    });
   }
 
-  static newFor({url, ownResponses, needsAuthorization, method, contentType}) {
+  static newFor({url, ownResponses, needsAuthorization, method, contentType, responseContentType}) {
     return new Endpoint({
       url: url,
       method: method,
       ownResponses: ownResponses,
       contentType: contentType,
+      responseContentType: responseContentType,
       needsAuthorization: needsAuthorization
     });
+  }
+
+  getContentFromResponse(response) {
+    // Response will be responsible for this in the future
+    if (this._responseContentType === Endpoint.CONTENT_TYPE_JSON) {
+      return response.json();
+    } else if (this._responseContentType === Endpoint.CONTENT_TYPE_TEXT) {
+      return response.text();
+    }
+    throw new Error("Content type not supported");
   }
 
   static getMethod() {

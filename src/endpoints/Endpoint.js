@@ -29,7 +29,7 @@ export default class Endpoint {
   }
 
   static newGet({url, ownResponses, needsAuthorization, contentType, responseContentType}) {
-    return Endpoint.newFor({
+    return this.newFor({
       url,
       ownResponses,
       needsAuthorization,
@@ -40,7 +40,7 @@ export default class Endpoint {
   }
 
   static newPost({url, ownResponses, needsAuthorization, contentType, responseContentType}) {
-    return Endpoint.newFor({
+    return this.newFor({
       url,
       ownResponses,
       needsAuthorization,
@@ -51,7 +51,7 @@ export default class Endpoint {
   }
 
   static newPut({url, ownResponses, needsAuthorization, contentType, responseContentType}) {
-    return Endpoint.newFor({
+    return this.newFor({
       url,
       ownResponses,
       needsAuthorization,
@@ -62,7 +62,7 @@ export default class Endpoint {
   }
 
   static newDelete({url, ownResponses, needsAuthorization, contentType, responseContentType}) {
-    return Endpoint.newFor({
+    return this.newFor({
       url,
       ownResponses,
       needsAuthorization,
@@ -73,7 +73,7 @@ export default class Endpoint {
   }
 
   static newPatch({url, ownResponses, needsAuthorization, contentType, responseContentType}) {
-    return Endpoint.newFor({
+    return this.newFor({
       url,
       ownResponses,
       needsAuthorization,
@@ -94,7 +94,7 @@ export default class Endpoint {
     });
   }
 
-  getContentFromResponse(response) {
+  convertBodyResponse(response) {
     // Response will be responsible for this in the future
     if (this._responseContentType === Endpoint.CONTENT_TYPE_JSON) {
       return response.json();

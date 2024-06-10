@@ -20,7 +20,7 @@ export default class RemoteRequester extends Requester {
 
     return fetch(this._baseUrl + "/" + url, request)
       .then((result) => {
-        return endpoint.getContentFromResponse(result);
+        return endpoint.convertBodyResponse(result);
       })
       .then(jsonResponse => {
         return this._buildResponse(jsonResponse, endpoint)

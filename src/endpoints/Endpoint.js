@@ -150,6 +150,10 @@ export default class Endpoint {
     return this.ownResponses().concat(this.generalResponses())
   }
 
+  get name() {
+    return `${this.method()} ${this.url()}`
+  }
+
   url() {
     return this._url;
   }

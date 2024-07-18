@@ -72,9 +72,9 @@ function dummyRequesterExpectingAuthenticationErrorResponse() {
   return requester;
 }
 
-function endpointWithResponses(responses) {
+function endpointWithResponses(responses, url= 'example') {
   return Endpoint.newGet({
-    url: 'example',
+    url: url,
     ownResponses: responses,
     needsAuthorization: false,
   });
@@ -369,4 +369,29 @@ test('When using fake requester default response can be overwritten', async () =
 
   // Then the response is handled by the custom response handler
   expect(response).toBe(AnotherTestSuccessfulApiResponse.defaultResponse());
+});
+
+test('When using fake requester only endpoint added to Fakerequester is overwritten', async () => {
+  // Given a client
+  const requester = new FakeRequester({waitingTime: 0});
+  const apiClient = new ApiClient(requester);
+
+  // I can create two get endpoint
+  const getEndpoint = endpointWithResponses([TestSuccessfulApiResponse]);
+  const getAnotherEndpoint = endpointWithResponses([TestSuccessfulApiResponse], 'another-example');
+
+  requester.addResponseFor({endpoint: getAnotherEndpoint, response: AnotherTestSuccessfulApiResponse});
+
+  const customResponseHandler = new ApiResponseHandler(
+    {
+      handlesSuccess: (response, request) => {
+        return response.response();
+      }
+    }
+  );
+
+  const response = await apiClient.callEndpoint(getEndpoint, {}, customResponseHandler);
+
+  // Then the response is handled by the custom response handler
+  expect(response).toBe(TestSuccessfulApiResponse.defaultResponse());
 });

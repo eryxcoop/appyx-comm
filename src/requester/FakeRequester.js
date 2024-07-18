@@ -8,11 +8,11 @@ export default class FakeRequester extends Requester {
   }
 
   addResponseFor({endpoint, response}) {
-    this._expectedResponses[endpoint.constructor.name] = response;
+    this._expectedResponses[endpoint.name] = response;
   }
 
   _getResponseClassFor(endpoint) {
-    return this._expectedResponses[endpoint.constructor.name];
+    return this._expectedResponses[endpoint.name];
   }
 
   _getExpectedResponseFor(endpoint) {

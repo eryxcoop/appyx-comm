@@ -1,11 +1,12 @@
 import Endpoint from "../src/endpoints/Endpoint";
-import {FakeRequester, SuccessfulApiResponse} from "../index";
+import {FakeRequester, RemoteRequester, SuccessfulApiResponse} from "../index";
 import ApiClient from "../src/ApiClient";
 import ApiResponseHandler from "../src/errors/ApiResponseHandler.js";
 import AuthenticationErrorResponse from "../src/responses/generalResponses/AuthenticationErrorResponse";
 
 import {expect, test} from 'vitest'
 import {DummyRequester} from "./utils/DummyRequester.js";
+import ConnectivityErrorResponse from "../src/responses/generalResponses/ConnectivityErrorResponse";
 
 class TestSuccessfulApiResponse extends SuccessfulApiResponse {
 
@@ -427,4 +428,50 @@ test('When using fake requester for endpoint with same url only the clarified me
 
   // Then the response is handled by the custom response handler
   expect(response).toBe(TestSuccessfulApiResponse.defaultResponse());
+});
+
+test('When network connective error happens it is handled', async () => {
+  // Given a client
+  const requester = new RemoteRequester('http://localhost:3100');
+
+  //  but has a general handler for connection error responses
+  const generalErrorHandler = ApiResponseHandler.for(
+    ConnectivityErrorResponse,
+    () => {
+      return 'network error!'
+    },
+  );
+  const client = new ExampleApiClient(requester, generalErrorHandler);
+
+  const response = await client.exampleEndpoint();
+
+  // Then the response is handled by the custom response handler
+  expect(response).toBe('network error!')
+});
+
+test('When network connectivity is not overriden by a specific error normal handler', async () => {
+  // Given a client
+  const requester = new RemoteRequester('http://localhost:3100');
+
+  //  but has a general handler for connection error responses
+  const generalErrorHandler = ApiResponseHandler.for(
+    ConnectivityErrorResponse,
+    () => {
+      return 'network error!'
+    },
+  );
+  const client = new ExampleApiClient(requester, generalErrorHandler);
+
+  //  but has a custom error handler for it
+  const customErrorHandler = ApiResponseHandler.for(
+    AuthenticationErrorResponse,
+    (request) => {
+      return 'should not see this'
+    },
+  );
+
+  const response = await client.exampleEndpoint(customErrorHandler);
+
+  // Then the response is handled by the custom response handler
+  expect(response).toBe('network error!')
 });

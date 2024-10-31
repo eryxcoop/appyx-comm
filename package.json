@@ -1,6 +1,6 @@
 {
   "name": "@eryxcoop/appyx-comm",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Paquete de comunicación web",
   "main": "index.js",
   "source": "index.js",

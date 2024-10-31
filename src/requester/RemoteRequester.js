@@ -2,6 +2,7 @@ import {Requester} from "./Requester";
 import UnexpectedErrorResponse from "../responses/generalResponses/UnexpectedErrorResponse";
 import MultiPartEncoder from "./encoders/MultiPartEncoder.js";
 import JsonEncoder from "./encoders/JsonEncoder.js";
+import ConnectivityErrorResponse from "../responses/generalResponses/ConnectivityErrorResponse";
 
 
 export default class RemoteRequester extends Requester {
@@ -24,6 +25,8 @@ export default class RemoteRequester extends Requester {
       })
       .then(jsonResponse => {
         return this._buildResponse(jsonResponse, endpoint)
+      }).catch((error) => {
+        return new ConnectivityErrorResponse(error);
       })
   }
 

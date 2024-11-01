@@ -6,6 +6,7 @@
 
 ``RemoteRequester`` is class that represents a requester. It is used to make requests to the api. You can create your
 own requester by extending this class.
+In case of an error connecting with the sever, an ``ConnectivityErrorResponse`` is returned.
 
 ```js
 const authorizationManager = new AppAuthorizationManager(this);
